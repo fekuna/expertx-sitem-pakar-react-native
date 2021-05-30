@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
 import Input from "../components/input";
 import { COLORS, SIZES, images, FONTS } from "../constants";
 import ButtonPrimary from "../components/button-primary";
@@ -11,54 +11,77 @@ const Signup = () => {
         <Image source={images.logo} style={{ width: 280, height: 280 }} />
       </View>
       <View style={[styles.body]}>
-        {/* INPUT USERNAME */}
-        <View style={{ marginBottom: 20 }}>
-          <Input
-            title="username"
-            rightIcon="user"
-            placeHolder="input your username"
-          />
-        </View>
-        {/* INPUT USERNAME */}
-        <View style={{ marginBottom: 20 }}>
-          <Input
-            title="password"
-            rightIcon="key"
-            placeHolder="input your password"
-          />
-        </View>
-        <View>
-          {/* SIGN IN BUTTON */}
-          <ButtonPrimary
-            ttonPrimary
-            style={{
-              paddingVertical: 10,
-              borderRadius: 15,
-              marginBottom: 15,
-            }}
-          >
-            <Text
-              style={{ ...FONTS.h3, color: COLORS.white, textAlign: "center" }}
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {/* INPUT USERNAME */}
+          <View style={{ marginBottom: 20 }}>
+            <Input
+              title="username"
+              rightIcon="user"
+              placeHolder="input your username"
+            />
+          </View>
+          {/* INPUT Email */}
+          <View style={{ marginBottom: 20 }}>
+            <Input
+              title="email"
+              rightIcon="envelope"
+              placeHolder="input your email"
+            />
+          </View>
+          {/* INPUT Password */}
+          <View style={{ marginBottom: 20 }}>
+            <Input
+              title="password"
+              rightIcon="key"
+              placeHolder="input your password"
+            />
+          </View>
+          {/* INPUT confirm password */}
+          <View style={{ marginBottom: 20 }}>
+            <Input
+              title="confirm password"
+              rightIcon="key"
+              placeHolder="input your confirmation password"
+            />
+          </View>
+          <View>
+            {/* SIGN IN BUTTON */}
+            <ButtonPrimary
+              ttonPrimary
+              style={{
+                paddingVertical: 10,
+                borderRadius: 15,
+                marginBottom: 15,
+              }}
             >
-              Sign in
-            </Text>
-          </ButtonPrimary>
-          {/* SIGN IN BUTTON */}
-          <ButtonPrimary
-            ttonPrimary
-            style={{
-              paddingVertical: 10,
-              borderRadius: 15,
-              backgroundColor: COLORS.white
-            }}
-          >
-            <Text
-              style={{ ...FONTS.h3, color: COLORS.gray, textAlign: "center" }}
+              <Text
+                style={{
+                  ...FONTS.h3,
+                  color: COLORS.white,
+                  textAlign: "center",
+                }}
+              >
+                Sign in
+              </Text>
+            </ButtonPrimary>
+            {/* SIGN IN BUTTON */}
+            <ButtonPrimary
+              ttonPrimary
+              style={{
+                paddingVertical: 10,
+                borderRadius: 15,
+                marginBottom: 15,
+                backgroundColor: COLORS.white,
+              }}
             >
-              Sign up
-            </Text>
-          </ButtonPrimary>
-        </View>
+              <Text
+                style={{ ...FONTS.h3, color: COLORS.gray, textAlign: "center" }}
+              >
+                Sign up
+              </Text>
+            </ButtonPrimary>
+          </View>
+        </ScrollView>
       </View>
     </View>
   );
@@ -80,7 +103,8 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
     paddingHorizontal: SIZES.padding,
-    paddingVertical: SIZES.padding,
+    // paddingVertical: SIZES.padding,
+    paddingTop: SIZES.padding,
   },
 });
 

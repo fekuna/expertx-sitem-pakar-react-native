@@ -4,5 +4,6 @@ import Disease from "./Disease";
 import Symptom from "./Symptom";
 import Setting from "./Setting";
 import Signin from "./Signin";
+import Signup from "./Signup";
 
-export { Home, Diagnosis, Symptom, Disease, Setting, Signin };
+export { Home, Diagnosis, Symptom, Disease, Setting, Signin, Signup };
