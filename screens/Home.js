@@ -14,7 +14,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { COLORS, FONTS, icons, images, SIZES } from "../constants";
 
 import Card from "../components/card";
-import Button from "../components/button";
+import ButtonPrimary from "../components/button-primary";
 
 const Home = ({ navigation }) => {
   const renderHeader = () => {
@@ -199,11 +199,11 @@ const Home = ({ navigation }) => {
           }}
         >
           <Text style={{ ...FONTS.h3 }}>Diagnosis User</Text>
-          <Button onPress={() => console.log("asd")}>
+          <ButtonPrimary onPress={() => console.log("asd")}>
             <Text style={{ color: COLORS.white, ...FONTS.body5 }}>
               VIEW ALL
             </Text>
-          </Button>
+          </ButtonPrimary>
         </View>
 
         {/* DIAGNOSIS */}

@@ -7,6 +7,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 
 import Tabs from "./navigation/tabs";
+import { Signin } from './screens'
 
 const Stack = createStackNavigator();
 
@@ -27,10 +28,10 @@ export default function App() {
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName={"Home"}
+        initialRouteName={"Signin"}
       >
         <Stack.Screen name="Home" component={Tabs} />
-        {/* <Stack.Screen name="Notification" /> */}
+        <Stack.Screen name="Signin" component={Signin} />
       </Stack.Navigator>
     </NavigationContainer>
   );

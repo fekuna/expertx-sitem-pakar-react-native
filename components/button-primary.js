@@ -4,7 +4,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { COLORS, SIZES } from "../constants";
 import { LinearGradient } from "expo-linear-gradient";
 
-const button = ({ style, children, ...props }) => {
+const ButtonPrimary = ({ style, children, ...props }) => {
   return (
     // <LinearGradient colors={[COLORS.primary, COLORS.secondary]}>
       <TouchableOpacity
@@ -28,10 +28,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4.65,
     elevation: 5,
-    padding: 4,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     borderRadius: 2,
     backgroundColor: COLORS.primary
   },
 });
 
-export default button;
+export default ButtonPrimary;
