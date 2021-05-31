@@ -1,9 +1,9 @@
 import React from "react";
-import { View, Image, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { View, Image, TouchableOpacity, Text, StyleSheet, Button } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { LinearGradient } from "expo-linear-gradient";
 
-import { Home, Diagnosis, Disease, Symptom, Setting } from "../screens";
+import { Home, Diagnosis, Disease, Symptom, Setting, Signout } from "../screens";
 import { COLORS, FONTS, icons, SIZES } from "../constants";
 
 const Tab = createBottomTabNavigator();
@@ -30,6 +30,19 @@ const TabBarCustomButton = ({ children, onPress }) => {
   );
 };
 
+// function MyTabBar({ navigation }) {
+//   return (
+//     <Button
+//       title="Go somewhere"
+//       onPress={() => {
+//         // Navigate using the `navigation` prop that you received
+//         console.log('hello')
+//         // navigation.navigate('SomeScreen');
+//       }}
+//     />
+//   );
+// }
+
 const Tabs = () => {
   return (
     <Tab.Navigator
@@ -46,6 +59,7 @@ const Tabs = () => {
           height: SIZES.height * 0.08,
         },
       }}
+      // tabBar={props => <MyTabBar {...props} />}
     >
       <Tab.Screen
         name="Home"
@@ -89,7 +103,7 @@ const Tabs = () => {
           tabBarButton: (props) => <TabBarCustomButton {...props} />,
         }}
       />
-      {/* <Tab.Screen
+      <Tab.Screen
         name="Setting"
         component={Setting}
         options={{
@@ -115,7 +129,7 @@ const Tabs = () => {
             </View>
           ),
         }}
-      /> */}
+      />
     </Tab.Navigator>
   );
 };
