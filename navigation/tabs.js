@@ -89,7 +89,7 @@ const Tabs = () => {
           tabBarButton: (props) => <TabBarCustomButton {...props} />,
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Setting"
         component={Setting}
         options={{
@@ -115,7 +115,7 @@ const Tabs = () => {
             </View>
           ),
         }}
-      />
+      /> */}
     </Tab.Navigator>
   );
 };
