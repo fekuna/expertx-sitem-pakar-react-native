@@ -1,10 +1,25 @@
-import React from "react";
+import React, { useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { View, Text, StyleSheet, Image } from "react-native";
 import Input from "../components/input";
 import { COLORS, SIZES, images, FONTS } from "../constants";
 import ButtonPrimary from "../components/button-primary";
 
+// actions
+import { signin } from "../store/actions";
+
 const Signin = () => {
+  // const dispatch = useCallback(() => {
+  //   return useDispatch();
+  // }, [useDispatch]);
+
+  const dispatch = useDispatch()
+
+
+  const onSubmit = () => {
+    console.log('onsubmit clicked')
+    dispatch(signin());
+  };
   return (
     <View style={[styles.container]}>
       <View style={[styles.header]}>
@@ -30,7 +45,7 @@ const Signin = () => {
         <View>
           {/* SIGN IN BUTTON */}
           <ButtonPrimary
-            ttonPrimary
+            onPress={onSubmit}
             style={{
               paddingVertical: 10,
               borderRadius: 15,
@@ -45,11 +60,10 @@ const Signin = () => {
           </ButtonPrimary>
           {/* SIGN IN BUTTON */}
           <ButtonPrimary
-            ttonPrimary
             style={{
               paddingVertical: 10,
               borderRadius: 15,
-              backgroundColor: COLORS.white
+              backgroundColor: COLORS.white,
             }}
           >
             <Text
