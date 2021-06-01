@@ -1,1 +1,3 @@
-export { signin, signup } from "./usersActions";
+export { signin, signup, logoutUser, getAllUsers } from "./usersActions";
+
+export { getPenyakit, getGejala } from "./penyakitActions";

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -15,8 +15,22 @@ import { COLORS, FONTS, icons, images, SIZES } from "../constants";
 
 import Card from "../components/card";
 import ButtonPrimary from "../components/button-primary";
+import { useSelector, useDispatch } from "react-redux";
+import { getPenyakit, getAllUsers } from "../store/actions";
 
 const Home = ({ navigation }) => {
+  const name = useSelector((state) => state.auth.user.name);
+  const allPenyakitLength = useSelector(
+    (state) => state.penyakit.allPenyakit.length
+  );
+  const allUsersLength = useSelector((state) => state.auth.allUsers.length);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getPenyakit());
+    dispatch(getAllUsers());
+  }, []);
+
   const renderHeader = () => {
     return (
       <View
@@ -61,9 +75,10 @@ const Home = ({ navigation }) => {
                 color: COLORS.white,
                 ...FONTS.h1,
                 marginTop: SIZES.base,
+                textTransform: "capitalize",
               }}
             >
-              ALFAN ALMUNAWAR
+              {name}
             </Text>
           </View>
 
@@ -124,7 +139,7 @@ const Home = ({ navigation }) => {
                         ...FONTS.h1,
                       }}
                     >
-                      2
+                      {allUsersLength}
                     </Text>
                   </View>
                 </View>
@@ -137,6 +152,7 @@ const Home = ({ navigation }) => {
                   marginLeft: 0,
                   marginRight: SIZES.radius,
                 }}
+                onPress={() => navigation.navigate("Penyakit")}
               >
                 <View
                   style={{
@@ -169,7 +185,7 @@ const Home = ({ navigation }) => {
                         ...FONTS.h1,
                       }}
                     >
-                      16
+                      {allPenyakitLength}
                     </Text>
                   </View>
                 </View>
@@ -199,7 +215,7 @@ const Home = ({ navigation }) => {
           }}
         >
           <Text style={{ ...FONTS.h3 }}>Diagnosis User</Text>
-          <ButtonPrimary onPress={() => console.log("asd")}>
+          <ButtonPrimary onPress={() => console.log("asd")} onPress={() => navigation.navigate('Penyakit')}>
             <Text style={{ color: COLORS.white, ...FONTS.body5 }}>
               VIEW ALL
             </Text>

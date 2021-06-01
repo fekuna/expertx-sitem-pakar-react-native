@@ -4,7 +4,7 @@ import { COLORS, FONTS } from "../constants";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 
-const Input = ({title, rightIcon, placeHolder, ...props}) => {
+const Input = ({title, rightIcon, placeHolder, style, ...props}) => {
   return (
     <View>
       <Text style={styles.title}>{title}</Text>
@@ -15,7 +15,7 @@ const Input = ({title, rightIcon, placeHolder, ...props}) => {
           color={COLORS.gray}
           style={[styles.rightIcon]}
         /> : null}
-        <TextInput placeholder={placeHolder} style={[styles.input, props.style]} />
+        <TextInput placeholder={placeHolder} style={[styles.input, style]} {...props} />
       </View>
     </View>
   );

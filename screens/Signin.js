@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { View, Text, StyleSheet, Image } from "react-native";
 import Input from "../components/input";
@@ -8,18 +8,27 @@ import ButtonPrimary from "../components/button-primary";
 // actions
 import { signin } from "../store/actions";
 
-const Signin = () => {
-  // const dispatch = useCallback(() => {
-  //   return useDispatch();
-  // }, [useDispatch]);
+const Signin = ({ navigation }) => {
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-  const dispatch = useDispatch()
-
+  const dispatch = useDispatch();
 
   const onSubmit = () => {
-    console.log('onsubmit clicked')
+    console.log("onsubmit clicked");
     dispatch(signin());
+    // console.log(isAuthenticated)
+    // if(isAuthenticated) {
+    //   navigation.navigate('Home')
+    // }
   };
+
+  useEffect(() => {
+    console.log(isAuthenticated, "didalem signin");
+    // if (isAuthenticated) {
+    //   navigation.navigate("Home");
+    // }
+  }, [isAuthenticated]);
+
   return (
     <View style={[styles.container]}>
       <View style={[styles.header]}>

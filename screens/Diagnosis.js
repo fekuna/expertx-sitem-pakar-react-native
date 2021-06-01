@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useRef, useCallback, useState } from "react";
+import React, { useRef, useCallback, useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -10,6 +10,9 @@ import {
 } from "react-native";
 import ButtonPrimary from "../components/button-primary";
 import { COLORS, FONTS, SIZES } from "../constants";
+
+import { useSelector, useDispatch } from "react-redux";
+import { getGejala } from "../store/actions";
 
 const DATA = [
   {
@@ -33,6 +36,9 @@ const Home = ({ navigation }) => {
   // States
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState([]);
+  const allGejala = useSelector((state) => state.penyakit.allGejala);
+
+  const dispatch = useDispatch();
 
   // Refs
   const scrollViewRef = useRef(null);
@@ -64,6 +70,10 @@ const Home = ({ navigation }) => {
       color: "#8f0026",
     },
   ]).current;
+
+  useEffect(() => {
+    dispatch(getGejala());
+  }, []);
 
   const RenderButton = useCallback(({ item, ...props }) => {
     return (
@@ -102,6 +112,7 @@ const Home = ({ navigation }) => {
         <Text
           style={{
             color: COLORS.white,
+            textAlign: "center",
             ...FONTS.h1,
           }}
         >
@@ -112,20 +123,23 @@ const Home = ({ navigation }) => {
   }, []);
 
   // Handler
-  const onScrollHandler = useCallback((e) => {
-    let page = Math.round(
-      parseFloat(e.nativeEvent.contentOffset.x / SIZES.width)
-    );
+  const onScrollHandler = useCallback(
+    (e) => {
+      let page = Math.round(
+        parseFloat(e.nativeEvent.contentOffset.x / SIZES.width)
+      );
 
-    setQuestionIndex(page);
+      setQuestionIndex(page);
 
-    console.log(page);
-  }, [questionIndex]);
+      console.log(page);
+    },
+    [questionIndex]
+  );
 
   const onClickHandler = useCallback(
     (item) => {
       // Update questionIndex if index less than data
-      if (questionIndex < DATA.length - 1) {
+      if (questionIndex < allGejala.length - 1) {
         // console.log(DATA.length);
         let index = questionIndex;
         scrollViewRef.current.scrollToIndex({
@@ -136,22 +150,22 @@ const Home = ({ navigation }) => {
       }
 
       const answerFound = answers.findIndex(
-        (answer) => answer.gejalaId == DATA[questionIndex].gejalaId
+        (answer) => answer.gejalaId == allGejala[questionIndex].id
       );
 
       if (answerFound > -1) {
-        console.log("Answer found")
+        console.log("Answer found");
         setAnswers((prevAnswers) => {
           prevAnswers[answerFound].cfu = item.cf;
           return prevAnswers;
         });
       } else {
-        console.log('Answer not found')
+        console.log("Answer not found");
         setAnswers((prevAnswers) => {
           return (prevAnswers = [
             ...prevAnswers,
             {
-              gejalaId: DATA[questionIndex].gejalaId,
+              gejalaId: allGejala[questionIndex].id,
               cfu: item.cf,
             },
           ]);
@@ -173,9 +187,12 @@ const Home = ({ navigation }) => {
     >
       {/* Questions */}
       <View style={styles.question}>
+        <View style={{}}>
+          <Text>Hello</Text>
+        </View>
         <FlatList
-          data={DATA}
-          keyExtractor={(item) => item.gejalaId.toString()}
+          data={allGejala}
+          keyExtractor={(item) => item.id.toString()}
           scrollEventThrottle={32}
           horizontal
           pagingEnabled
@@ -190,7 +207,7 @@ const Home = ({ navigation }) => {
       {/* Question Indicator */}
       <View>
         <Text style={{ ...FONTS.h4, color: COLORS.white }}>
-          {questionIndex + 1} / {DATA.length}
+          {questionIndex + 1} / {allGejala.length}
         </Text>
       </View>
 
@@ -210,7 +227,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: COLORS.secondary,
   },
   shadow: {
     shadowColor: "#000",

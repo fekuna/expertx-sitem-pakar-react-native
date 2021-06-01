@@ -3,7 +3,11 @@ import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import ButtonPrimary from "../components/button-primary";
 import { COLORS, FONTS } from "../constants";
 
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../store/actions";
+
 const Home = ({ navigation }) => {
+  const dispatch = useDispatch();
   return (
     <View style={styles.container}>
       <Text
@@ -22,17 +26,25 @@ const Home = ({ navigation }) => {
       >
         WILL UPDATE LATER..
       </Text>
-      <ButtonPrimary style={{
-        backgroundColor: 'red',
-        marginTop: 30,
-        paddingVertical: 15,
-        paddingHorizontal: 20
-      }} onPress={() => navigation.navigate("Home")}>
-        <Text style={{
-          color: COLORS.white,
-          ...FONTS.h3
-
-        }}>Logout</Text>
+      <ButtonPrimary
+        style={{
+          backgroundColor: "red",
+          marginTop: 30,
+          paddingVertical: 15,
+          paddingHorizontal: 20,
+        }}
+        onPress={() => {
+          dispatch(logoutUser());
+        }}
+      >
+        <Text
+          style={{
+            color: COLORS.white,
+            ...FONTS.h3,
+          }}
+        >
+          Logout
+        </Text>
       </ButtonPrimary>
     </View>
   );

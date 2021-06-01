@@ -1,8 +1,9 @@
-import { SIGN_IN, SIGN_UP } from "../actions/actionTypes";
+import { SIGN_IN, GET_USERS } from "../actions/actionTypes";
 
 const initialState = {
   isAuthenticated: false,
   user: {},
+  allUsers: []
 };
 
 export default (state = initialState, action) => {
@@ -13,6 +14,11 @@ export default (state = initialState, action) => {
         isAuthenticated: !!action.payload.userId,
         user: action.payload,
       };
+    case GET_USERS:
+      return {
+        ...state,
+        allUsers: action.payload
+      }
     default:
       return state;
   }
