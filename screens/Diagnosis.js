@@ -14,49 +14,25 @@ import ButtonPrimary from "../components/button-primary";
 import { COLORS, FONTS, SIZES, certainty } from "../constants";
 
 import { useSelector, useDispatch } from "react-redux";
-import { getGejala } from "../store/actions";
+import { getGejala, calculateDiagnosis } from "../store/actions";
 import RoundButton from "../components/round-button";
 
-const Home = ({ navigation }) => {
+const Diagnosis = ({ navigation }) => {
   // States
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState([]);
   const allGejala = useSelector((state) => state.penyakit.allGejala);
+  const userId = useSelector((state) => state.auth.user.userId);
+  const penyakit = useSelector((state) => state.penyakit.allPenyakit);
 
   const dispatch = useDispatch();
 
   // Refs
   const scrollViewRef = useRef(null);
 
-  // const certainty = useRef([
-  //   {
-  //     name: "Pasti",
-  //     cf: 1.0,
-  //     color: "#04c92f",
-  //   },
-  //   {
-  //     name: "Hampir Pasti",
-  //     cf: 0.8,
-  //     color: "#00b87a",
-  //   },
-  //   {
-  //     name: "Kemungkinan Besar",
-  //     cf: 0.6,
-  //     color: "#005ba1",
-  //   },
-  //   {
-  //     name: "Kemungkinan",
-  //     cf: 0.4,
-  //     color: "#9da600",
-  //   },
-  //   {
-  //     name: "Tidak tahu",
-  //     cf: 0,
-  //     color: "#8f0026",
-  //   },
-  // ]).current;
-
   useEffect(() => {
+    console.log(questionIndex);
+    console.log(answers);
     dispatch(getGejala());
   }, []);
 
@@ -121,48 +97,60 @@ const Home = ({ navigation }) => {
     [questionIndex]
   );
 
-  const onClickHandler = useCallback(
-    (item) => {
-      // Update questionIndex if index less than data
-      if (questionIndex < allGejala.length - 1) {
-        // console.log(DATA.length);
-        let index = questionIndex;
-        scrollViewRef.current.scrollToIndex({
-          index: index + 1,
-          animated: true,
-        });
-        setQuestionIndex((prevIndex) => prevIndex + 1);
-      }
+  const onClickHandler = (item) => {
+    // Update questionIndex if index less than data
+    if (questionIndex < allGejala.length - 1) {
+      // console.log(DATA.length);
+      let index = questionIndex;
+      scrollViewRef.current.scrollToIndex({
+        index: index + 1,
+        animated: true,
+      });
+      setQuestionIndex((prevIndex) => prevIndex + 1);
+    }
 
-      const answerFound = answers.findIndex(
-        (answer) => answer.gejalaId == allGejala[questionIndex].id
-      );
+    const answerFound = answers.findIndex(
+      (answer) => answer.gejalaId == allGejala[questionIndex].id
+    );
 
-      if (answerFound > -1) {
-        console.log("Answer found");
-        setAnswers((prevAnswers) => {
-          prevAnswers[answerFound].cfu = item.cf;
-          return prevAnswers;
-        });
-      } else {
-        console.log("Answer not found");
-        setAnswers((prevAnswers) => {
-          return (prevAnswers = [
-            ...prevAnswers,
-            {
-              gejalaId: allGejala[questionIndex].id,
-              cfu: item.cf,
-            },
-          ]);
-        });
-      }
+    if (answerFound > -1) {
+      setAnswers((prevAnswers) => {
+        prevAnswers[answerFound].cfu = item.cf;
+        return prevAnswers;
+      });
+    } else {
+      setAnswers((prevAnswers) => {
+        prevAnswers = [
+          ...prevAnswers,
+          {
+            gejalaId: allGejala[questionIndex].id,
+            cfu: item.cf,
+          },
+        ];
+        return prevAnswers;
+      });
+    }
 
-      // set
-      // console.log(questionIndex);
-      // console.log(item);
-    },
-    [questionIndex, scrollViewRef, answers]
-  );
+    // set
+    // console.log(questionIndex);
+    // console.log(item);
+  };
+
+  const onSubmit = () => {
+    const data = {
+      userId,
+      gejala: answers,
+    };
+
+    dispatch(calculateDiagnosis(data));
+    scrollViewRef.current.scrollToIndex({
+      index: 0,
+      animated: true,
+    });
+    setQuestionIndex(0);
+    setAnswers([]);
+    navigation.navigate("DiagnosisResult");
+  };
 
   console.log(answers);
   return (
@@ -253,4 +241,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default Diagnosis;

@@ -16,17 +16,13 @@ const Signin = ({ navigation }) => {
   const onSubmit = () => {
     console.log("onsubmit clicked");
     dispatch(signin());
-    // console.log(isAuthenticated)
-    // if(isAuthenticated) {
-    //   navigation.navigate('Home')
-    // }
   };
 
   useEffect(() => {
     console.log(isAuthenticated, "didalem signin");
-    // if (isAuthenticated) {
-    //   navigation.navigate("Home");
-    // }
+    if (isAuthenticated) {
+      navigation.navigate("Home");
+    }
   }, [isAuthenticated]);
 
   return (
@@ -73,6 +69,9 @@ const Signin = ({ navigation }) => {
               paddingVertical: 10,
               borderRadius: 15,
               backgroundColor: COLORS.white,
+            }}
+            onPress={() => {
+              navigation.navigate('Signup')
             }}
           >
             <Text

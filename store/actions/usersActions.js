@@ -13,7 +13,7 @@ export const signin = (data) => async (dispatch) => {
       body: JSON.stringify({ username: "fekuna", password: "asd123123" }),
     });
   } catch (e) {
-    console.log(e);
+    console.log(e.message);
   }
 
   const { token } = await response.json();
@@ -57,11 +57,29 @@ export const authCheckLoginUser = () => async (dispatch) => {
   }
 };
 
-export const signup = (data) => {
-  return {
-    type: SIGN_UP,
-    payload: data,
-  };
+export const signup = (data) => async (dispatch) => {
+  let response;
+  try {
+    response = await fetch("http://192.168.1.4:5000/api/users/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+  } catch (e) {
+    console.log(e.message);
+  }
+
+  const { token } = await response.json();
+
+  const decoded = jwtDecode(token);
+  await SecureStore.setItemAsync("userToken", token);
+
+  dispatch({
+    type: SIGN_IN,
+    payload: decoded,
+  });
 };
 
 export const getAllUsers = () => async (dispatch) => {
@@ -74,7 +92,7 @@ export const getAllUsers = () => async (dispatch) => {
       },
     });
   } catch (e) {
-    console.log(e, 'getAllusers eeeee');
+    console.log(e, "getAllusers eeeee");
   }
 
   const result = await response.json();

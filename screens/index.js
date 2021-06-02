@@ -1,5 +1,6 @@
 import Home from "./Home";
 import Diagnosis from "./Diagnosis";
+import DiagnosisResult from "./DiagosisResult";
 import Penyakit from "./Penyakit";
 import AddPenyakit from "./AddPenyakit";
 import AddGejala from "./AddGejala";
@@ -23,5 +24,6 @@ export {
   AddPenyakit,
   AddGejala,
   PenyakitDetail,
-  AddGejalaToPenyakit
+  AddGejalaToPenyakit,
+  DiagnosisResult
 };

@@ -1,10 +1,41 @@
-import React from "react";
-import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, Image, ScrollView, Alert } from "react-native";
+import { useDispatch } from "react-redux";
 import Input from "../components/input";
 import { COLORS, SIZES, images, FONTS } from "../constants";
 import ButtonPrimary from "../components/button-primary";
 
-const Signup = () => {
+import { signup } from "../store/actions";
+
+const Signup = ({ navigation }) => {
+  //State
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const dispatch = useDispatch();
+
+  const onSubmit = () => {
+    if (password !== confirmPassword) {
+      return Alert.alert(
+        "Something went wrong!",
+        "Password didn't match, please check"
+      );
+    }
+
+    const data = {
+      username: username.trim().toLowerCase(),
+      email: email.trim().toLowerCase(),
+      password,
+      role: "user",
+    };
+
+    dispatch(signup(data));
+
+    console.log(data);
+  };
+
   return (
     <View style={[styles.container]}>
       <View style={[styles.header]}>
@@ -18,6 +49,7 @@ const Signup = () => {
               title="username"
               rightIcon="user"
               placeHolder="input your username"
+              onChangeText={(text) => setUsername(text)}
             />
           </View>
           {/* INPUT Email */}
@@ -26,6 +58,7 @@ const Signup = () => {
               title="email"
               rightIcon="envelope"
               placeHolder="input your email"
+              onChangeText={(text) => setEmail(text)}
             />
           </View>
           {/* INPUT Password */}
@@ -34,6 +67,8 @@ const Signup = () => {
               title="password"
               rightIcon="key"
               placeHolder="input your password"
+              secureTextEntry
+              onChangeText={(text) => setPassword(text)}
             />
           </View>
           {/* INPUT confirm password */}
@@ -42,6 +77,8 @@ const Signup = () => {
               title="confirm password"
               rightIcon="key"
               placeHolder="input your confirmation password"
+              secureTextEntry
+              onChangeText={(text) => setConfirmPassword(text)}
             />
           </View>
           <View>
@@ -53,6 +90,7 @@ const Signup = () => {
                 borderRadius: 15,
                 marginBottom: 15,
               }}
+              onPress={() => onSubmit()}
             >
               <Text
                 style={{
@@ -61,7 +99,7 @@ const Signup = () => {
                   textAlign: "center",
                 }}
               >
-                Sign in
+                Sign up
               </Text>
             </ButtonPrimary>
             {/* SIGN IN BUTTON */}
@@ -73,11 +111,14 @@ const Signup = () => {
                 marginBottom: 15,
                 backgroundColor: COLORS.white,
               }}
+              onPress={() => {
+                navigation.navigate("Signin");
+              }}
             >
               <Text
                 style={{ ...FONTS.h3, color: COLORS.gray, textAlign: "center" }}
               >
-                Sign up
+                Sign in
               </Text>
             </ButtonPrimary>
           </View>

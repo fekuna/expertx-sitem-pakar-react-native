@@ -1,8 +1,13 @@
-import { GET_GEJALA, GET_PENYAKIT } from "../actions/actionTypes";
+import {
+  CALCULATE_DIAGNOSIS,
+  GET_GEJALA,
+  GET_PENYAKIT,
+} from "../actions/actionTypes";
 
 const initialState = {
   allPenyakit: [],
   allGejala: [],
+  latestDiagnosis: {},
 };
 
 export default (state = initialState, action) => {
@@ -17,6 +22,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         allGejala: action.payload,
+      };
+    case CALCULATE_DIAGNOSIS:
+      return {
+        ...state,
+        latestDiagnosis: action.payload,
       };
     default:
       return state;

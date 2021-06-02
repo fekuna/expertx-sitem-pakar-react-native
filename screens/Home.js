@@ -19,7 +19,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getPenyakit, getAllUsers } from "../store/actions";
 
 const Home = ({ navigation }) => {
-  const name = useSelector((state) => state.auth.user.name);
+  const username = useSelector((state) => state.auth.user.username);
   const allPenyakitLength = useSelector(
     (state) => state.penyakit.allPenyakit.length
   );
@@ -78,7 +78,7 @@ const Home = ({ navigation }) => {
                 textTransform: "capitalize",
               }}
             >
-              {name}
+              {username}
             </Text>
           </View>
 
@@ -215,7 +215,10 @@ const Home = ({ navigation }) => {
           }}
         >
           <Text style={{ ...FONTS.h3 }}>Diagnosis User</Text>
-          <ButtonPrimary onPress={() => console.log("asd")} onPress={() => navigation.navigate('Penyakit')}>
+          <ButtonPrimary
+            onPress={() => console.log("asd")}
+            onPress={() => navigation.navigate("Penyakit")}
+          >
             <Text style={{ color: COLORS.white, ...FONTS.body5 }}>
               VIEW ALL
             </Text>

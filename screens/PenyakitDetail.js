@@ -22,7 +22,6 @@ import Input from "../components/input";
 const PenyakitDetail = ({ navigation, route }) => {
   const { id, name, solusi, gejala } = route.params;
 
-  // console.log(gejala, 'oaksdosakd')
 
   const dispatch = useDispatch();
   // redux state
@@ -33,7 +32,6 @@ const PenyakitDetail = ({ navigation, route }) => {
 
   useEffect(() => {
     dispatch(getPenyakit());
-    // console.log('oaskdosakd')
   }, []);
 
   const renderHeader = () => {
@@ -60,7 +58,6 @@ const PenyakitDetail = ({ navigation, route }) => {
     );
   };
 
-  console.log(gejalaPenyakit, "awee");
 
   const renderBody = () => {
     return (

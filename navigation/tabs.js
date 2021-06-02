@@ -1,9 +1,25 @@
-import React from "react";
-import { View, Image, TouchableOpacity, Text, StyleSheet, Button } from "react-native";
+import React, { useEffect } from "react";
+import {
+  View,
+  Image,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  Button,
+} from "react-native";
+import { useSelector } from "react-redux";
+
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { LinearGradient } from "expo-linear-gradient";
 
-import { Home, Diagnosis, Disease, Symptom, Setting, Signout } from "../screens";
+import {
+  Home,
+  Diagnosis,
+  Disease,
+  Symptom,
+  Setting,
+  Signout,
+} from "../screens";
 import { COLORS, FONTS, icons, SIZES } from "../constants";
 
 const Tab = createBottomTabNavigator();
@@ -17,7 +33,7 @@ const TabBarCustomButton = ({ children, onPress }) => {
         alignItems: "center",
         ...styles.shadow,
       }}
-      activeOpacity={.7}
+      activeOpacity={0.7}
       onPress={onPress}
     >
       <LinearGradient
@@ -43,7 +59,16 @@ const TabBarCustomButton = ({ children, onPress }) => {
 //   );
 // }
 
-const Tabs = () => {
+const Tabs = ({ navigation }) => {
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+  useEffect(() => {
+    console.log("di dalam tabs", isAuthenticated);
+    if (!isAuthenticated) {
+      navigation.navigate("Signin");
+    }
+  }, [isAuthenticated]);
+
   return (
     <Tab.Navigator
       tabBarOptions={{

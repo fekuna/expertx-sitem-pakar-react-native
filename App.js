@@ -15,7 +15,8 @@ import {
   AddPenyakit,
   AddGejala,
   PenyakitDetail,
-  AddGejalaToPenyakit
+  AddGejalaToPenyakit,
+  DiagnosisResult,
 } from "./screens";
 
 import store from "./store/store";
@@ -55,21 +56,19 @@ export default function App() {
           }}
           initialRouteName={"Signin"}
         >
-          {store.getState().auth.isAuthenticated ? (
-            <>
-              <Stack.Screen name="Home" component={Tabs} />
-              <Stack.Screen name="Penyakit" component={Penyakit} />
-              <Stack.Screen name="AddPenyakit" component={AddPenyakit} />
-              <Stack.Screen name="AddGejala" component={AddGejala} />
-              <Stack.Screen name="PenyakitDetail" component={PenyakitDetail} />
-              <Stack.Screen name="AddGejalaToPenyakit" component={AddGejalaToPenyakit} />
-            </>
-          ) : (
-            <>
-              <Stack.Screen name="Signin" component={Signin} />
-              <Stack.Screen name="Signup" component={Signup} />
-            </>
-          )}
+          <Stack.Screen name="Home" component={Tabs} />
+          <Stack.Screen name="Penyakit" component={Penyakit} />
+          <Stack.Screen name="AddPenyakit" component={AddPenyakit} />
+          <Stack.Screen name="AddGejala" component={AddGejala} />
+          <Stack.Screen name="PenyakitDetail" component={PenyakitDetail} />
+          <Stack.Screen name="DiagnosisResult" component={DiagnosisResult} />
+          <Stack.Screen
+            name="AddGejalaToPenyakit"
+            component={AddGejalaToPenyakit}
+          />
+
+          <Stack.Screen name="Signin" component={Signin} />
+          <Stack.Screen name="Signup" component={Signup} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
