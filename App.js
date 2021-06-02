@@ -8,7 +8,15 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 
 import Tabs from "./navigation/tabs";
-import { Signin, Signup, Penyakit, AddPenyakit, AddGejala, PenyakitDetail } from "./screens";
+import {
+  Signin,
+  Signup,
+  Penyakit,
+  AddPenyakit,
+  AddGejala,
+  PenyakitDetail,
+  AddGejalaToPenyakit
+} from "./screens";
 
 import store from "./store/store";
 import { authCheckLoginUser } from "./store/actions/usersActions";
@@ -54,6 +62,7 @@ export default function App() {
               <Stack.Screen name="AddPenyakit" component={AddPenyakit} />
               <Stack.Screen name="AddGejala" component={AddGejala} />
               <Stack.Screen name="PenyakitDetail" component={PenyakitDetail} />
+              <Stack.Screen name="AddGejalaToPenyakit" component={AddGejalaToPenyakit} />
             </>
           ) : (
             <>

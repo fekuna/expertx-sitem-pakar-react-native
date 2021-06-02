@@ -20,10 +20,18 @@ import { getPenyakit } from "../store/actions";
 import Input from "../components/input";
 
 const AddPenyakit = ({ navigation }) => {
+  const dispatch = useDispatch();
+
   // State
   const [id, setId] = useState(null);
   const [name, setName] = useState(null);
   const [solusi, setSolusi] = useState(null);
+
+  useEffect(() => {
+    return () => {
+      dispatch(getPenyakit());
+    };
+  }, []);
 
   const renderHeader = () => {
     return (
@@ -81,9 +89,6 @@ const AddPenyakit = ({ navigation }) => {
   };
 
   const onSubmit = async () => {
-    console.log("id", id.toUpperCase());
-    console.log("name", name);
-    console.log("solusi", name);
     const data = {
       id: id.toUpperCase(),
       name,
@@ -104,10 +109,11 @@ const AddPenyakit = ({ navigation }) => {
     }
 
     // const result = await response.json()
-    setId("")
-    setName("")
-    setSolusi("")
-    navigation.goBack()
+    // console.log(result)
+    setId("");
+    setName("");
+    setSolusi("");
+    navigation.goBack();
   };
 
   return (

@@ -8,29 +8,14 @@ import {
   FlatList,
   Dimensions,
 } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
+
 import ButtonPrimary from "../components/button-primary";
-import { COLORS, FONTS, SIZES } from "../constants";
+import { COLORS, FONTS, SIZES, certainty } from "../constants";
 
 import { useSelector, useDispatch } from "react-redux";
 import { getGejala } from "../store/actions";
-
-const DATA = [
-  {
-    gejalaId: 1,
-    name: "Pungung sakit",
-    desc: "lorem ipsum dolor",
-  },
-  {
-    gejalaId: 2,
-    name: "Muntah-muntah",
-    desc: "lorem awee awee",
-  },
-  {
-    gejalaId: 3,
-    name: "Pusing",
-    desc: "Sasdasdsad hoho hoho",
-  },
-];
+import RoundButton from "../components/round-button";
 
 const Home = ({ navigation }) => {
   // States
@@ -43,33 +28,33 @@ const Home = ({ navigation }) => {
   // Refs
   const scrollViewRef = useRef(null);
 
-  const certainty = useRef([
-    {
-      name: "Pasti",
-      cf: 1.0,
-      color: "#04c92f",
-    },
-    {
-      name: "Hampir Pasti",
-      cf: 0.8,
-      color: "#00b87a",
-    },
-    {
-      name: "Kemungkinan Besar",
-      cf: 0.6,
-      color: "#005ba1",
-    },
-    {
-      name: "Kemungkinan",
-      cf: 0.4,
-      color: "#9da600",
-    },
-    {
-      name: "Tidak tahu",
-      cf: 0,
-      color: "#8f0026",
-    },
-  ]).current;
+  // const certainty = useRef([
+  //   {
+  //     name: "Pasti",
+  //     cf: 1.0,
+  //     color: "#04c92f",
+  //   },
+  //   {
+  //     name: "Hampir Pasti",
+  //     cf: 0.8,
+  //     color: "#00b87a",
+  //   },
+  //   {
+  //     name: "Kemungkinan Besar",
+  //     cf: 0.6,
+  //     color: "#005ba1",
+  //   },
+  //   {
+  //     name: "Kemungkinan",
+  //     cf: 0.4,
+  //     color: "#9da600",
+  //   },
+  //   {
+  //     name: "Tidak tahu",
+  //     cf: 0,
+  //     color: "#8f0026",
+  //   },
+  // ]).current;
 
   useEffect(() => {
     dispatch(getGejala());
@@ -187,9 +172,6 @@ const Home = ({ navigation }) => {
     >
       {/* Questions */}
       <View style={styles.question}>
-        <View style={{}}>
-          <Text>Hello</Text>
-        </View>
         <FlatList
           data={allGejala}
           keyExtractor={(item) => item.id.toString()}
@@ -218,6 +200,20 @@ const Home = ({ navigation }) => {
         ))}
         {/* {certainty.map((c, idx) => renderButton(c, idx))} */}
       </View>
+
+      {allGejala.length === questionIndex + 1 ? (
+        <RoundButton
+          style={{
+            position: "absolute",
+            bottom: 70,
+            right: 30,
+            backgroundColor: COLORS.green,
+          }}
+          onPress={() => onSubmit()}
+        >
+          <FontAwesome name="check" size={34} color="white" />
+        </RoundButton>
+      ) : null}
     </LinearGradient>
   );
 };

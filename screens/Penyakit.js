@@ -23,6 +23,10 @@ const Penyakit = ({ navigation }) => {
   // State
   const allPenyakit = useSelector((state) => state.penyakit.allPenyakit);
 
+  useEffect(() => {
+    dispatch(getPenyakit());
+  }, []);
+
   const renderHeader = () => {
     return (
       <View style={styles.header}>
@@ -77,9 +81,7 @@ const Penyakit = ({ navigation }) => {
     );
   };
 
-  useEffect(() => {
-    dispatch(getPenyakit());
-  }, [allPenyakit]);
+  
 
   return (
     <View style={styles.container}>

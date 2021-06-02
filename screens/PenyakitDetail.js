@@ -13,7 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import RoundButton from "../components/round-button";
 import { COLORS, FONTS, icons, SIZES } from "../constants";
 
-import { FontAwesome } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import ButtonPrimary from "../components/button-primary";
 import ListActivity from "../components/list-activity";
 import { getPenyakit } from "../store/actions";
@@ -21,7 +21,20 @@ import Input from "../components/input";
 
 const PenyakitDetail = ({ navigation, route }) => {
   const { id, name, solusi, gejala } = route.params;
-  // State
+
+  // console.log(gejala, 'oaksdosakd')
+
+  const dispatch = useDispatch();
+  // redux state
+  const gejalaPenyakit = useSelector(
+    (state) =>
+      state.penyakit.allPenyakit.find((penyakit) => penyakit.id === id).gejala
+  );
+
+  useEffect(() => {
+    dispatch(getPenyakit());
+    // console.log('oaskdosakd')
+  }, []);
 
   const renderHeader = () => {
     return (
@@ -47,6 +60,8 @@ const PenyakitDetail = ({ navigation, route }) => {
     );
   };
 
+  console.log(gejalaPenyakit, "awee");
+
   const renderBody = () => {
     return (
       <View style={styles.body}>
@@ -59,18 +74,16 @@ const PenyakitDetail = ({ navigation, route }) => {
             Gejala-gejala
           </Text>
           <FlatList
-            data={gejala}
+            scrollEventThrottle={32}
+            scrollEnabled
+            data={gejalaPenyakit}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => {
-              console.log(item, 'he')
               return (
                 <ListActivity
                   title={item.id}
                   subtitle={item.desc}
                   rightText={item.Penyakit_Gejala.cfp}
-                  onPress={() => {
-                    return navigation.navigate("PenyakitDetail", item);
-                  }}
                 />
               );
             }}
@@ -80,7 +93,9 @@ const PenyakitDetail = ({ navigation, route }) => {
     );
   };
 
-  console.log(route.params);
+  const onSubmit = () => {
+    navigation.navigate("AddGejalaToPenyakit", { id });
+  };
 
   return (
     <View style={styles.container}>
@@ -94,7 +109,7 @@ const PenyakitDetail = ({ navigation, route }) => {
         }}
         onPress={() => onSubmit()}
       >
-        <FontAwesome name="check" size={34} color="white" />
+        <AntDesign name="plus" size={34} color="white" />
       </RoundButton>
     </View>
   );
@@ -131,7 +146,9 @@ const styles = StyleSheet.create({
   solusi: {
     marginBottom: 20,
   },
-  gejalaContainer: {},
+  gejalaContainer: {
+    flex: 1,
+  },
   shadow: {
     shadowColor: "#000",
     shadowOffset: {

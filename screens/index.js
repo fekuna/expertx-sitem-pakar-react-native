@@ -9,6 +9,7 @@ import Signin from "./Signin";
 import Signup from "./Signup";
 import Signout from "./Signout";
 import PenyakitDetail from "./PenyakitDetail";
+import AddGejalaToPenyakit from "./AddGejalaToPenyakit";
 
 export {
   Home,
@@ -21,5 +22,6 @@ export {
   Signout,
   AddPenyakit,
   AddGejala,
-  PenyakitDetail
+  PenyakitDetail,
+  AddGejalaToPenyakit
 };
