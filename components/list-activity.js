@@ -3,7 +3,14 @@ import { View, Text, Image } from "react-native";
 import { COLORS, FONTS, SIZES } from "../constants";
 import Card from "./card";
 
-const ListActivity = ({ title, subtitle, rightText, icon, ...props }) => {
+const ListActivity = ({
+  title,
+  subtitle,
+  rightText,
+  icon,
+  customRightContent,
+  ...props
+}) => {
   return (
     <Card
       style={{
@@ -33,6 +40,7 @@ const ListActivity = ({ title, subtitle, rightText, icon, ...props }) => {
       <View>
         <Text style={{ ...FONTS.h1, color: COLORS.gray }}>{rightText}</Text>
       </View>
+      {customRightContent ? customRightContent : null}
       {icon ? (
         <Image source={icon} style={{ width: 20, height: 20, marginLeft: 8 }} />
       ) : null}

@@ -4,7 +4,8 @@ import DiagnosisResult from "./DiagosisResult";
 import Penyakit from "./Penyakit";
 import AddPenyakit from "./AddPenyakit";
 import AddGejala from "./AddGejala";
-import Symptom from "./Symptom";
+import EditGejala from "./EditGejala";
+import Gejala from "./Gejala";
 import Setting from "./Setting";
 import Signin from "./Signin";
 import Signup from "./Signup";
@@ -15,7 +16,7 @@ import AddGejalaToPenyakit from "./AddGejalaToPenyakit";
 export {
   Home,
   Diagnosis,
-  Symptom,
+  Gejala,
   Penyakit,
   Setting,
   Signin,
@@ -23,6 +24,7 @@ export {
   Signout,
   AddPenyakit,
   AddGejala,
+  EditGejala,
   PenyakitDetail,
   AddGejalaToPenyakit,
   DiagnosisResult

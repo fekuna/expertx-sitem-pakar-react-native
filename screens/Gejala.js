@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -6,28 +6,30 @@ import {
   TouchableWithoutFeedback,
   Image,
   FlatList,
-  ScrollView,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
+import { MaterialIcons } from "@expo/vector-icons";
 
 import RoundButton from "../components/round-button";
 import { COLORS, FONTS, icons, SIZES } from "../constants";
 
-import { FontAwesome } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import ButtonPrimary from "../components/button-primary";
 import ListActivity from "../components/list-activity";
 import { getGejala } from "../store/actions";
-import Input from "../components/input";
 
 // Env
 import { IP_ADDR } from "@env";
 
-const AddGejala = ({ navigation, route }) => {
+const Gejala = ({ navigation }) => {
   const dispatch = useDispatch();
+
   // State
-  const [id, setId] = useState("");
-  const [name, setName] = useState("");
-  const [question, setQuestion] = useState("");
+  const allGejala = useSelector((state) => state.penyakit.allGejala);
+
+  useEffect(() => {
+    dispatch(getGejala());
+  }, []);
 
   const renderHeader = () => {
     return (
@@ -46,7 +48,7 @@ const AddGejala = ({ navigation, route }) => {
           </TouchableWithoutFeedback>
         </View>
         <View style={styles.headerBottom}>
-          <Text style={{ ...FONTS.h1, color: COLORS.white }}>Add Gejala</Text>
+          <Text style={{ ...FONTS.h1, color: COLORS.white }}>Gejala</Text>
         </View>
       </View>
     );
@@ -55,64 +57,62 @@ const AddGejala = ({ navigation, route }) => {
   const renderBody = () => {
     return (
       <View style={styles.body}>
-        <ScrollView>
-          <View style={{ marginBottom: 20 }}>
-            <Input
-              title="id gejala"
-              placeHolder="masukan id gejala"
-              onChangeText={(text) => setId(text)}
-              value={id}
+        <FlatList
+          data={allGejala}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <ListActivity
+              title={item.name}
+              subtitle={item.createdAt}
+              // icon={icons.right_arrow}
+              customRightContent={
+                <View style={{ flexDirection: "row", padding: 8 }}>
+                  <MaterialIcons
+                    name="edit"
+                    size={24}
+                    color="green"
+                    onPress={() =>
+                      navigation.navigate("EditGejala", {
+                        gejalaId: item.id,
+                        nameEdit: item.name,
+                        questionEdit: item.question,
+                      })
+                    }
+                  />
+                  <MaterialIcons
+                    name="delete"
+                    size={24}
+                    color="red"
+                    style={{ marginLeft: 10 }}
+                    onPress={() => onDelete(item.id)}
+                  />
+                </View>
+              }
+              onPress={() => {
+                return navigation.navigate("PenyakitDetail", item);
+              }}
             />
-          </View>
-          <View style={{ marginBottom: 20 }}>
-            <Input
-              title="name"
-              placeHolder="masukan nama gejala"
-              onChangeText={(text) => setName(text)}
-              value={name}
-            />
-          </View>
-          <View style={{ marginBottom: 20 }}>
-            <Input
-              title="question"
-              placeHolder="masukan pertanyaan"
-              multiline={true}
-              style={{ paddingBottom: 35 }}
-              onChangeText={(text) => setQuestion(text)}
-              value={question}
-            />
-          </View>
-        </ScrollView>
+          )}
+        />
       </View>
     );
   };
 
-  const onSubmit = async () => {
-    const data = {
-      id: id.toUpperCase(),
-      name,
-      question,
-    };
-
+  // Button actions
+  const onDelete = async (gejalaId) => {
     let response;
     try {
-      response = await fetch(`${IP_ADDR}/api/gejala/`, {
-        method: "POST",
+      response = await fetch(`${IP_ADDR}/api/gejala/${gejalaId}`, {
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
       });
     } catch (e) {
       console.log(e);
     }
 
-    // const result = await response.json()
-    setId("");
-    setName("");
-    setQuestion("");
     dispatch(getGejala());
-    navigation.goBack()
   };
 
   return (
@@ -125,9 +125,9 @@ const AddGejala = ({ navigation, route }) => {
           bottom: 40,
           right: 30,
         }}
-        onPress={() => onSubmit()}
+        onPress={() => navigation.navigate("AddGejala")}
       >
-        <FontAwesome name="check" size={34} color="white" />
+        <AntDesign name="plus" size={34} color="white" />
       </RoundButton>
     </View>
   );
@@ -173,4 +173,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddGejala;
+export default Gejala;

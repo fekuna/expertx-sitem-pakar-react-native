@@ -1,9 +1,12 @@
 import { CALCULATE_DIAGNOSIS, GET_GEJALA, GET_PENYAKIT } from "./actionTypes";
 
+// ENV
+import { IP_ADDR } from "@env";
+
 export const getPenyakit = () => async (dispatch) => {
   let response;
   try {
-    response = await fetch("http://192.168.1.4:5000/api/penyakit/", {
+    response = await fetch(`${IP_ADDR}/api/penyakit/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -24,7 +27,7 @@ export const getPenyakit = () => async (dispatch) => {
 export const getGejala = () => async (dispatch) => {
   let response;
   try {
-    response = await fetch("http://192.168.1.4:5000/api/gejala/", {
+    response = await fetch(`${IP_ADDR}/api/gejala/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -45,7 +48,7 @@ export const getGejala = () => async (dispatch) => {
 export const calculateDiagnosis = (data) => async (dispatch) => {
   let response;
   try {
-    response = await fetch("http://192.168.1.4:5000/api/penyakit/calculateCF", {
+    response = await fetch(`${IP_ADDR}/api/penyakit/calculateCF`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -57,5 +60,6 @@ export const calculateDiagnosis = (data) => async (dispatch) => {
   }
 
   const result = await response.json();
+  console.log(result)
   dispatch({ type: CALCULATE_DIAGNOSIS, payload: result.maxResult });
 };

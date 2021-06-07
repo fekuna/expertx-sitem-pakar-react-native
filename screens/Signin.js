@@ -1,24 +1,30 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { View, Text, StyleSheet, Image } from "react-native";
 import Input from "../components/input";
 import { COLORS, SIZES, images, FONTS } from "../constants";
 import ButtonPrimary from "../components/button-primary";
 
+// Env
+import { IP_ADDR } from "@env";
+
 // actions
 import { signin } from "../store/actions";
 
 const Signin = ({ navigation }) => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const [username, setUsername] = useState();
+  const [password, setPassword] = useState();
 
   const dispatch = useDispatch();
 
   const onSubmit = () => {
     console.log("onsubmit clicked");
-    dispatch(signin());
+    dispatch(signin({ username, password }));
   };
 
   useEffect(() => {
+    console.log("coeg", IP_ADDR);
     console.log(isAuthenticated, "didalem signin");
     if (isAuthenticated) {
       navigation.navigate("Home");
@@ -37,6 +43,7 @@ const Signin = ({ navigation }) => {
             title="username"
             rightIcon="user"
             placeHolder="input your username"
+            onChangeText={(text) => setUsername(text)}
           />
         </View>
         {/* INPUT USERNAME */}
@@ -45,6 +52,7 @@ const Signin = ({ navigation }) => {
             title="password"
             rightIcon="key"
             placeHolder="input your password"
+            onChangeText={(text) => setPassword(text)}
           />
         </View>
         <View>
@@ -71,7 +79,7 @@ const Signin = ({ navigation }) => {
               backgroundColor: COLORS.white,
             }}
             onPress={() => {
-              navigation.navigate('Signup')
+              navigation.navigate("Signup");
             }}
           >
             <Text

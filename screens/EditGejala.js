@@ -24,10 +24,12 @@ import { IP_ADDR } from "@env";
 
 const AddGejala = ({ navigation, route }) => {
   const dispatch = useDispatch();
+
+  const { gejalaId, nameEdit, questionEdit } = route.params;
   // State
-  const [id, setId] = useState("");
-  const [name, setName] = useState("");
-  const [question, setQuestion] = useState("");
+  const [id, setId] = useState(gejalaId);
+  const [name, setName] = useState(nameEdit);
+  const [question, setQuestion] = useState(questionEdit);
 
   const renderHeader = () => {
     return (
@@ -96,8 +98,8 @@ const AddGejala = ({ navigation, route }) => {
 
     let response;
     try {
-      response = await fetch(`${IP_ADDR}/api/gejala/`, {
-        method: "POST",
+      response = await fetch(`${IP_ADDR}/api/gejala/${gejalaId}`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },

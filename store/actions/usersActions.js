@@ -2,15 +2,19 @@ import * as SecureStore from "expo-secure-store";
 import jwtDecode from "jwt-decode";
 import { GET_USERS, SIGN_IN, SIGN_UP } from "./actionTypes";
 
+// ENV
+import { IP_ADDR } from "@env";
+
 export const signin = (data) => async (dispatch) => {
   let response;
+  console.log("awee", `${IP_ADDR}/api/users/login`);
   try {
-    response = await fetch("http://192.168.1.4:5000/api/users/login", {
+    response = await fetch(`${IP_ADDR}/api/users/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username: "fekuna", password: "asd123123" }),
+      body: JSON.stringify(data),
     });
   } catch (e) {
     console.log(e.message);
@@ -60,7 +64,7 @@ export const authCheckLoginUser = () => async (dispatch) => {
 export const signup = (data) => async (dispatch) => {
   let response;
   try {
-    response = await fetch("http://192.168.1.4:5000/api/users/signup", {
+    response = await fetch(`${IP_ADDR}/api/users/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -85,7 +89,7 @@ export const signup = (data) => async (dispatch) => {
 export const getAllUsers = () => async (dispatch) => {
   let response;
   try {
-    response = await fetch("http://192.168.1.4:5000/api/users", {
+    response = await fetch(`${IP_ADDR}/api/users`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

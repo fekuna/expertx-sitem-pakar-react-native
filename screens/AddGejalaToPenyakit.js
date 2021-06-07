@@ -18,6 +18,9 @@ import { FontAwesome } from "@expo/vector-icons";
 import { getGejala, getPenyakit } from "../store/actions";
 import Input from "../components/input";
 
+// Env
+import { IP_ADDR } from "@env";
+
 const AddGejalaToPenyakit = ({ navigation, route }) => {
   const { id } = route.params;
   const dispatch = useDispatch();
@@ -26,7 +29,7 @@ const AddGejalaToPenyakit = ({ navigation, route }) => {
   const allGejala = useSelector((state) => state.penyakit.allGejala);
 
   // State
-  const [gejalaId, setGejalaId] = useState("G1");
+  const [gejalaId, setGejalaId] = useState();
   const [cfp, setCfp] = useState();
 
   useEffect(() => {
@@ -72,7 +75,7 @@ const AddGejalaToPenyakit = ({ navigation, route }) => {
               onChangeText={(text) => setCfp(text)}
             />
           </View> */}
-          <View style={{marginBottom: 20}}>
+          <View style={{ marginBottom: 20 }}>
             <Text
               style={{
                 ...FONTS.h3,
@@ -84,8 +87,8 @@ const AddGejalaToPenyakit = ({ navigation, route }) => {
               CF pakar
             </Text>
             <Picker
-              selectedValue={gejalaId}
-              onValueChange={(itemValue, itemIndex) => setGejalaId(itemValue)}
+              selectedValue={cfp}
+              onValueChange={(itemValue, itemIndex) => setCfp(itemValue)}
             >
               {certainty.map((certain, idx) => {
                 return (
@@ -132,28 +135,27 @@ const AddGejalaToPenyakit = ({ navigation, route }) => {
   const onSubmit = async () => {
     const data = {
       penyakitId: id,
-      gejalaId: gejalaId,
+      gejalaId,
       cfp,
     };
+    // console.log(data);
 
     let response;
     try {
-      response = await fetch(
-        "http://192.168.1.4:5000/api/penyakit/add/gejala",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      response = await fetch(`${IP_ADDR}/api/penyakit/add/gejala`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
     } catch (e) {
       console.log(e);
     }
 
     // const result = await response.json();
     // console.log(result, 'result');
+    setGejalaId("");
     setCfp("");
     navigation.goBack();
   };

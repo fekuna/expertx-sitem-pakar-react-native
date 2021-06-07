@@ -51,9 +51,9 @@ const Penyakit = ({ navigation }) => {
               paddingVertical: 10,
               paddingHorizontal: 10,
             }}
-            onPress={() => navigation.navigate("AddGejala")}
+            onPress={() => navigation.navigate("Gejala")}
           >
-            <Text style={{ color: COLORS.white, ...FONTS.h4 }}>ADD GEJALA</Text>
+            <Text style={{ color: COLORS.white, ...FONTS.h4 }}>VIEW GEJALA</Text>
           </ButtonPrimary>
         </View>
       </View>

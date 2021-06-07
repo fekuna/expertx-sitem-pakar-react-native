@@ -77,7 +77,7 @@ const Diagnosis = ({ navigation }) => {
             ...FONTS.h1,
           }}
         >
-          {item.name}
+          {item.question}
         </Text>
       </View>
     );

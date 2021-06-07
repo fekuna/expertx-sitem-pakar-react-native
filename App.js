@@ -17,6 +17,8 @@ import {
   PenyakitDetail,
   AddGejalaToPenyakit,
   DiagnosisResult,
+  Gejala,
+  EditGejala,
 } from "./screens";
 
 import store from "./store/store";
@@ -58,8 +60,10 @@ export default function App() {
         >
           <Stack.Screen name="Home" component={Tabs} />
           <Stack.Screen name="Penyakit" component={Penyakit} />
+          <Stack.Screen name="Gejala" component={Gejala} />
           <Stack.Screen name="AddPenyakit" component={AddPenyakit} />
           <Stack.Screen name="AddGejala" component={AddGejala} />
+          <Stack.Screen name="EditGejala" component={EditGejala} />
           <Stack.Screen name="PenyakitDetail" component={PenyakitDetail} />
           <Stack.Screen name="DiagnosisResult" component={DiagnosisResult} />
           <Stack.Screen
