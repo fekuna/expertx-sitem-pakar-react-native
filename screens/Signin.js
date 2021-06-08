@@ -20,7 +20,11 @@ const Signin = ({ navigation }) => {
 
   const onSubmit = () => {
     console.log("onsubmit clicked");
+    console.log("username:", username);
+    console.log("password:", password);
     dispatch(signin({ username, password }));
+    setUsername("");
+    setPassword("");
   };
 
   useEffect(() => {
@@ -44,6 +48,7 @@ const Signin = ({ navigation }) => {
             rightIcon="user"
             placeHolder="input your username"
             onChangeText={(text) => setUsername(text)}
+            value={username}
           />
         </View>
         {/* INPUT USERNAME */}
@@ -52,7 +57,9 @@ const Signin = ({ navigation }) => {
             title="password"
             rightIcon="key"
             placeHolder="input your password"
+            secureTextEntry
             onChangeText={(text) => setPassword(text)}
+            value={password}
           />
         </View>
         <View>

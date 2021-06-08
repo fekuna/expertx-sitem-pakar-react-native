@@ -22,6 +22,7 @@ const Penyakit = ({ navigation }) => {
 
   // State
   const allPenyakit = useSelector((state) => state.penyakit.allPenyakit);
+  const userRole = useSelector((state) => state.auth.user.role);
 
   useEffect(() => {
     dispatch(getPenyakit());
@@ -53,7 +54,9 @@ const Penyakit = ({ navigation }) => {
             }}
             onPress={() => navigation.navigate("Gejala")}
           >
-            <Text style={{ color: COLORS.white, ...FONTS.h4 }}>VIEW GEJALA</Text>
+            <Text style={{ color: COLORS.white, ...FONTS.h4 }}>
+              VIEW GEJALA
+            </Text>
           </ButtonPrimary>
         </View>
       </View>
@@ -81,22 +84,22 @@ const Penyakit = ({ navigation }) => {
     );
   };
 
-  
-
   return (
     <View style={styles.container}>
       {renderHeader()}
       {renderBody()}
-      <RoundButton
-        style={{
-          position: "absolute",
-          bottom: 40,
-          right: 30,
-        }}
-        onPress={() => navigation.navigate("AddPenyakit")}
-      >
-        <AntDesign name="plus" size={34} color="white" />
-      </RoundButton>
+      {userRole === "admin" && (
+        <RoundButton
+          style={{
+            position: "absolute",
+            bottom: 40,
+            right: 30,
+          }}
+          onPress={() => navigation.navigate("AddPenyakit")}
+        >
+          <AntDesign name="plus" size={34} color="white" />
+        </RoundButton>
+      )}
     </View>
   );
 };

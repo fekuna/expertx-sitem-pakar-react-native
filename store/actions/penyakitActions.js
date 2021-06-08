@@ -46,6 +46,7 @@ export const getGejala = () => async (dispatch) => {
 };
 
 export const calculateDiagnosis = (data) => async (dispatch) => {
+  // console.log(data, "data neh");
   let response;
   try {
     response = await fetch(`${IP_ADDR}/api/penyakit/calculateCF`, {
@@ -60,6 +61,6 @@ export const calculateDiagnosis = (data) => async (dispatch) => {
   }
 
   const result = await response.json();
-  console.log(result)
+  console.log(result);
   dispatch({ type: CALCULATE_DIAGNOSIS, payload: result.maxResult });
 };

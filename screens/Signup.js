@@ -33,6 +33,11 @@ const Signup = ({ navigation }) => {
 
     dispatch(signup(data));
 
+    setUsername("");
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+
     console.log(data);
   };
 
@@ -50,6 +55,7 @@ const Signup = ({ navigation }) => {
               rightIcon="user"
               placeHolder="input your username"
               onChangeText={(text) => setUsername(text)}
+              value={username}
             />
           </View>
           {/* INPUT Email */}
@@ -59,6 +65,7 @@ const Signup = ({ navigation }) => {
               rightIcon="envelope"
               placeHolder="input your email"
               onChangeText={(text) => setEmail(text)}
+              value={email}
             />
           </View>
           {/* INPUT Password */}
@@ -69,6 +76,7 @@ const Signup = ({ navigation }) => {
               placeHolder="input your password"
               secureTextEntry
               onChangeText={(text) => setPassword(text)}
+              value={password}
             />
           </View>
           {/* INPUT confirm password */}
@@ -79,6 +87,7 @@ const Signup = ({ navigation }) => {
               placeHolder="input your confirmation password"
               secureTextEntry
               onChangeText={(text) => setConfirmPassword(text)}
+              value={confirmPassword}
             />
           </View>
           <View>

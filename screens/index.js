@@ -9,9 +9,9 @@ import Gejala from "./Gejala";
 import Setting from "./Setting";
 import Signin from "./Signin";
 import Signup from "./Signup";
-import Signout from "./Signout";
 import PenyakitDetail from "./PenyakitDetail";
 import AddGejalaToPenyakit from "./AddGejalaToPenyakit";
+import History from "./History";
 
 export {
   Home,
@@ -21,11 +21,11 @@ export {
   Setting,
   Signin,
   Signup,
-  Signout,
   AddPenyakit,
   AddGejala,
   EditGejala,
   PenyakitDetail,
   AddGejalaToPenyakit,
-  DiagnosisResult
+  DiagnosisResult,
+  History,
 };

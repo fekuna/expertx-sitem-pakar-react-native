@@ -7,7 +7,6 @@ import { IP_ADDR } from "@env";
 
 export const signin = (data) => async (dispatch) => {
   let response;
-  console.log("awee", `${IP_ADDR}/api/users/login`);
   try {
     response = await fetch(`${IP_ADDR}/api/users/login`, {
       method: "POST",
@@ -17,7 +16,7 @@ export const signin = (data) => async (dispatch) => {
       body: JSON.stringify(data),
     });
   } catch (e) {
-    console.log(e.message);
+    console.log(e.message, 'eeasda');
   }
 
   const { token } = await response.json();

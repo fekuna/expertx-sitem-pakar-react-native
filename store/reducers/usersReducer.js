@@ -1,9 +1,14 @@
-import { SIGN_IN, GET_USERS } from "../actions/actionTypes";
+import {
+  SIGN_IN,
+  GET_USERS,
+  GET_HISTORY_DIAGNOSIS_USER,
+} from "../actions/actionTypes";
 
 const initialState = {
   isAuthenticated: false,
   user: {},
-  allUsers: []
+  allUsers: [],
+  historyDiagnosis: [],
 };
 
 export default (state = initialState, action) => {
@@ -17,8 +22,13 @@ export default (state = initialState, action) => {
     case GET_USERS:
       return {
         ...state,
-        allUsers: action.payload
-      }
+        allUsers: action.payload,
+      };
+    case GET_HISTORY_DIAGNOSIS_USER:
+      return {
+        ...state,
+        historyDiagnosis: action.payload,
+      };
     default:
       return state;
   }

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   Image,
+  FlatList,
   TouchableWithoutFeedback,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -15,21 +16,27 @@ import { COLORS, FONTS, icons, images, SIZES } from "../constants";
 
 import Card from "../components/card";
 import ButtonPrimary from "../components/button-primary";
+import ListActivity from "../components/list-activity";
 import { useSelector, useDispatch } from "react-redux";
-import { getPenyakit, getAllUsers } from "../store/actions";
+import { getPenyakit, getAllUsers, getHistoryUser } from "../store/actions";
 
 const Home = ({ navigation }) => {
   const username = useSelector((state) => state.auth.user.username);
+  const userId = useSelector((state) => state.auth.user.userId);
   const allPenyakitLength = useSelector(
     (state) => state.penyakit.allPenyakit.length
   );
   const allUsersLength = useSelector((state) => state.auth.allUsers.length);
+  const userHistories = useSelector((state) => state.auth.historyDiagnosis);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
+    // console.log(userId)
     dispatch(getPenyakit());
     dispatch(getAllUsers());
-  }, []);
+    dispatch(getHistoryUser({ id: userId }));
+  }, [userId]);
 
   const renderHeader = () => {
     return (
@@ -204,6 +211,7 @@ const Home = ({ navigation }) => {
           marginVertical: SIZES.padding,
           paddingHorizontal: SIZES.radius,
           paddingVertical: SIZES.padding,
+          flex: 1,
         }}
       >
         <View
@@ -215,10 +223,7 @@ const Home = ({ navigation }) => {
           }}
         >
           <Text style={{ ...FONTS.h3 }}>Diagnosis User</Text>
-          <ButtonPrimary
-            onPress={() => console.log("asd")}
-            onPress={() => navigation.navigate("Penyakit")}
-          >
+          <ButtonPrimary onPress={() => navigation.navigate("History")}>
             <Text style={{ color: COLORS.white, ...FONTS.body5 }}>
               VIEW ALL
             </Text>
@@ -226,45 +231,30 @@ const Home = ({ navigation }) => {
         </View>
 
         {/* DIAGNOSIS */}
-        <View>
-          <Card
-            style={{
-              flexDirection: "row",
-              paddingVertical: SIZES.height * 0.012,
-              alignItems: "center",
-            }}
-          >
-            <View
-              style={{
-                alignItems: "flex-start",
-                marginRight: "auto",
-              }}
-            >
-              <Text style={{ ...FONTS.h3 }}>Batuk</Text>
-              <Text style={{ ...FONTS.body5, color: COLORS.gray }}>
-                02-07-2012
-              </Text>
-            </View>
-            <View>
-              <Text style={{ ...FONTS.h1, color: COLORS.gray }}>95%</Text>
-            </View>
-            <Image
-              source={icons.right_arrow}
-              style={{ width: 20, height: 20, marginLeft: 8 }}
-            />
-          </Card>
+        <View style={{ flex: 3 }}>
+          <FlatList
+            data={userHistories.slice(0, 5)}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <ListActivity
+                title={item.penyakitName}
+                subtitle={item.createdAt}
+                rightText={`${(item.hasil * 100).toFixed(2)}%`}
+              />
+            )}
+          />
         </View>
       </View>
     );
   };
 
   return (
-    <ScrollView>
-      <View style={{ flex: 1, paddingBottom: 130 }}>
-        {renderHeader()}
-        {renderUserActivities()}
-      </View>
-    </ScrollView>
+    // <ScrollView>
+    <View style={{ flex: 1, paddingBottom: 10 }}>
+      {renderHeader()}
+      {renderUserActivities()}
+    </View>
+    // </ScrollView>
   );
 };
 

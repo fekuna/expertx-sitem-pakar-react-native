@@ -10,13 +10,19 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 
 import { COLORS, FONTS, icons, SIZES } from "../constants";
-import { getPenyakit } from "../store/actions";
+import { getHistoryUser } from "../store/actions";
 
 const DiagnosisResult = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const diagnosisResult = useSelector(
     (state) => state.penyakit.latestDiagnosis
   );
+
+  useEffect(() => {
+    return () => {
+      dispatch(getHistoryUser());
+    };
+  }, []);
 
   const renderHeader = () => {
     return (

@@ -26,6 +26,7 @@ const Gejala = ({ navigation }) => {
 
   // State
   const allGejala = useSelector((state) => state.penyakit.allGejala);
+  const userRole = useSelector((state) => state.auth.user.role);
 
   useEffect(() => {
     dispatch(getGejala());
@@ -66,27 +67,29 @@ const Gejala = ({ navigation }) => {
               subtitle={item.createdAt}
               // icon={icons.right_arrow}
               customRightContent={
-                <View style={{ flexDirection: "row", padding: 8 }}>
-                  <MaterialIcons
-                    name="edit"
-                    size={24}
-                    color="green"
-                    onPress={() =>
-                      navigation.navigate("EditGejala", {
-                        gejalaId: item.id,
-                        nameEdit: item.name,
-                        questionEdit: item.question,
-                      })
-                    }
-                  />
-                  <MaterialIcons
-                    name="delete"
-                    size={24}
-                    color="red"
-                    style={{ marginLeft: 10 }}
-                    onPress={() => onDelete(item.id)}
-                  />
-                </View>
+                userRole === "admin" && (
+                  <View style={{ flexDirection: "row", padding: 8 }}>
+                    <MaterialIcons
+                      name="edit"
+                      size={24}
+                      color="green"
+                      onPress={() =>
+                        navigation.navigate("EditGejala", {
+                          gejalaId: item.id,
+                          nameEdit: item.name,
+                          questionEdit: item.question,
+                        })
+                      }
+                    />
+                    <MaterialIcons
+                      name="delete"
+                      size={24}
+                      color="red"
+                      style={{ marginLeft: 10 }}
+                      onPress={() => onDelete(item.id)}
+                    />
+                  </View>
+                )
               }
               onPress={() => {
                 return navigation.navigate("PenyakitDetail", item);
@@ -119,16 +122,18 @@ const Gejala = ({ navigation }) => {
     <View style={styles.container}>
       {renderHeader()}
       {renderBody()}
-      <RoundButton
-        style={{
-          position: "absolute",
-          bottom: 40,
-          right: 30,
-        }}
-        onPress={() => navigation.navigate("AddGejala")}
-      >
-        <AntDesign name="plus" size={34} color="white" />
-      </RoundButton>
+      {userRole === "admin" && (
+        <RoundButton
+          style={{
+            position: "absolute",
+            bottom: 40,
+            right: 30,
+          }}
+          onPress={() => navigation.navigate("AddGejala")}
+        >
+          <AntDesign name="plus" size={34} color="white" />
+        </RoundButton>
+      )}
     </View>
   );
 };

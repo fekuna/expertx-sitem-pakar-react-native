@@ -32,6 +32,7 @@ const PenyakitDetail = ({ navigation, route }) => {
     (state) =>
       state.penyakit.allPenyakit.find((penyakit) => penyakit.id === id).gejala
   );
+  const userRole = useSelector((state) => state.auth.user.role);
 
   useEffect(() => {
     LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
@@ -98,15 +99,17 @@ const PenyakitDetail = ({ navigation, route }) => {
                   subtitle={item.desc}
                   rightText={item.Penyakit_Gejala.cfp}
                   customRightContent={
-                    <View style={{ marginLeft: 5 }}>
-                      <MaterialIcons
-                        name="delete"
-                        size={26}
-                        color="red"
-                        style={{ marginLeft: 10 }}
-                        onPress={() => onDelete(item.id)}
-                      />
-                    </View>
+                    userRole === "admin" && (
+                      <View style={{ marginLeft: 5 }}>
+                        <MaterialIcons
+                          name="delete"
+                          size={26}
+                          color="red"
+                          style={{ marginLeft: 10 }}
+                          onPress={() => onDelete(item.id)}
+                        />
+                      </View>
+                    )
                   }
                 />
               );
