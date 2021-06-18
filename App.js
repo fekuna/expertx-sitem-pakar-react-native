@@ -20,6 +20,7 @@ import {
   Gejala,
   EditGejala,
   History,
+  EditPenyakit,
 } from "./screens";
 
 import store from "./store/store";
@@ -63,6 +64,7 @@ export default function App() {
           <Stack.Screen name="Penyakit" component={Penyakit} />
           <Stack.Screen name="Gejala" component={Gejala} />
           <Stack.Screen name="AddPenyakit" component={AddPenyakit} />
+          <Stack.Screen name="EditPenyakit" component={EditPenyakit} />
           <Stack.Screen name="AddGejala" component={AddGejala} />
           <Stack.Screen name="EditGejala" component={EditGejala} />
           <Stack.Screen name="PenyakitDetail" component={PenyakitDetail} />

@@ -8,12 +8,11 @@ import {
   FlatList,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 
 import RoundButton from "../components/round-button";
 import { COLORS, FONTS, icons, SIZES } from "../constants";
 
-import { AntDesign } from "@expo/vector-icons";
 import ButtonPrimary from "../components/button-primary";
 import ListActivity from "../components/list-activity";
 import { getGejala } from "../store/actions";
@@ -36,17 +35,28 @@ const Gejala = ({ navigation }) => {
     return (
       <View style={styles.header}>
         <View style={styles.headerTop}>
-          <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
-            <Image
-              source={icons.back_arrow}
-              style={{
-                width: 20,
-                height: 20,
-                marginLeft: 8,
-                tintColor: COLORS.white,
-              }}
-            />
-          </TouchableWithoutFeedback>
+          <View style={{ marginRight: "auto" }}>
+            <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
+              <Image
+                source={icons.back_arrow}
+                style={{
+                  width: 20,
+                  height: 20,
+                  marginLeft: 8,
+                  tintColor: COLORS.white,
+                }}
+              />
+            </TouchableWithoutFeedback>
+          </View>
+          <View>
+            {userRole === "admin" && (
+              <TouchableWithoutFeedback
+                onPress={() => navigation.navigate("AddGejala")}
+              >
+                <AntDesign name="pluscircleo" size={35} color="white" />
+              </TouchableWithoutFeedback>
+            )}
+          </View>
         </View>
         <View style={styles.headerBottom}>
           <Text style={{ ...FONTS.h1, color: COLORS.white }}>Gejala</Text>
@@ -60,12 +70,12 @@ const Gejala = ({ navigation }) => {
       <View style={styles.body}>
         <FlatList
           data={allGejala}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.gejalaId}
           renderItem={({ item }) => (
             <ListActivity
               title={item.name}
               subtitle={item.createdAt}
-              // icon={icons.right_arrow}
+              icon={userRole === "user" ? icons.right_arrow : null}
               customRightContent={
                 userRole === "admin" && (
                   <View style={{ flexDirection: "row", padding: 8 }}>
@@ -75,7 +85,7 @@ const Gejala = ({ navigation }) => {
                       color="green"
                       onPress={() =>
                         navigation.navigate("EditGejala", {
-                          gejalaId: item.id,
+                          gejalaId: item.gejalaId,
                           nameEdit: item.name,
                           questionEdit: item.question,
                         })
@@ -86,14 +96,11 @@ const Gejala = ({ navigation }) => {
                       size={24}
                       color="red"
                       style={{ marginLeft: 10 }}
-                      onPress={() => onDelete(item.id)}
+                      onPress={() => onDelete(item.gejalaId)}
                     />
                   </View>
                 )
               }
-              onPress={() => {
-                return navigation.navigate("PenyakitDetail", item);
-              }}
             />
           )}
         />
@@ -122,18 +129,6 @@ const Gejala = ({ navigation }) => {
     <View style={styles.container}>
       {renderHeader()}
       {renderBody()}
-      {userRole === "admin" && (
-        <RoundButton
-          style={{
-            position: "absolute",
-            bottom: 40,
-            right: 30,
-          }}
-          onPress={() => navigation.navigate("AddGejala")}
-        >
-          <AntDesign name="plus" size={34} color="white" />
-        </RoundButton>
-      )}
     </View>
   );
 };
@@ -153,6 +148,7 @@ const styles = StyleSheet.create({
   headerTop: {
     paddingTop: 10,
     marginBottom: "auto",
+    flexDirection: "row",
   },
   headerBottom: {
     flexDirection: "row",

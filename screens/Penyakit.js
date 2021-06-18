@@ -12,10 +12,10 @@ import { useSelector, useDispatch } from "react-redux";
 import RoundButton from "../components/round-button";
 import { COLORS, FONTS, icons, SIZES } from "../constants";
 
-import { AntDesign } from "@expo/vector-icons";
+import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import ButtonPrimary from "../components/button-primary";
 import ListActivity from "../components/list-activity";
-import { getPenyakit } from "../store/actions";
+import { getPenyakit, deletePenyakit } from "../store/actions";
 
 const Penyakit = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -32,17 +32,28 @@ const Penyakit = ({ navigation }) => {
     return (
       <View style={styles.header}>
         <View style={styles.headerTop}>
-          <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
-            <Image
-              source={icons.back_arrow}
-              style={{
-                width: 20,
-                height: 20,
-                marginLeft: 8,
-                tintColor: COLORS.white,
-              }}
-            />
-          </TouchableWithoutFeedback>
+          <View style={{ marginRight: "auto" }}>
+            <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
+              <Image
+                source={icons.back_arrow}
+                style={{
+                  width: 20,
+                  height: 20,
+                  marginLeft: 8,
+                  tintColor: COLORS.white,
+                }}
+              />
+            </TouchableWithoutFeedback>
+          </View>
+          <View>
+            {userRole === "admin" && (
+              <TouchableWithoutFeedback
+                onPress={() => navigation.navigate("AddPenyakit")}
+              >
+                <AntDesign name="pluscircleo" size={35} color="white" />
+              </TouchableWithoutFeedback>
+            )}
+          </View>
         </View>
         <View style={styles.headerBottom}>
           <Text style={{ ...FONTS.h1, color: COLORS.white }}>Penyakit</Text>
@@ -68,12 +79,38 @@ const Penyakit = ({ navigation }) => {
       <View style={styles.body}>
         <FlatList
           data={allPenyakit}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.penyakitId}
           renderItem={({ item }) => (
             <ListActivity
               title={item.name}
               subtitle={item.createdAt}
-              icon={icons.right_arrow}
+              icon={userRole === "user" ? icons.right_arrow : null}
+              customRightContent={
+                userRole === "admin" && (
+                  <View style={{ flexDirection: "row", padding: 8 }}>
+                    <MaterialIcons
+                      name="edit"
+                      size={24}
+                      color="green"
+                      onPress={() =>
+                        navigation.navigate("EditPenyakit", {
+                          penyakitId: item.penyakitId,
+                          name: item.name,
+                          desc: item.desc,
+                          solusi: item.solusi,
+                        })
+                      }
+                    />
+                    <MaterialIcons
+                      name="delete"
+                      size={24}
+                      color="red"
+                      style={{ marginLeft: 10 }}
+                      onPress={() => dispatch(deletePenyakit(item.penyakitId))}
+                    />
+                  </View>
+                )
+              }
               onPress={() => {
                 return navigation.navigate("PenyakitDetail", item);
               }}
@@ -88,18 +125,6 @@ const Penyakit = ({ navigation }) => {
     <View style={styles.container}>
       {renderHeader()}
       {renderBody()}
-      {userRole === "admin" && (
-        <RoundButton
-          style={{
-            position: "absolute",
-            bottom: 40,
-            right: 30,
-          }}
-          onPress={() => navigation.navigate("AddPenyakit")}
-        >
-          <AntDesign name="plus" size={34} color="white" />
-        </RoundButton>
-      )}
     </View>
   );
 };
@@ -119,6 +144,7 @@ const styles = StyleSheet.create({
   headerTop: {
     paddingTop: 10,
     marginBottom: "auto",
+    flexDirection: "row",
   },
   headerBottom: {
     flexDirection: "row",

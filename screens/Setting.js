@@ -10,22 +10,6 @@ const Home = ({ navigation }) => {
   const dispatch = useDispatch();
   return (
     <View style={styles.container}>
-      <Text
-        style={{
-          ...FONTS.h1,
-          color: COLORS.white,
-        }}
-      >
-        UNDER CONSTRUCTION,
-      </Text>
-      <Text
-        style={{
-          ...FONTS.h1,
-          color: COLORS.white,
-        }}
-      >
-        WILL UPDATE LATER..
-      </Text>
       <ButtonPrimary
         style={{
           backgroundColor: "red",

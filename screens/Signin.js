@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, Alert } from "react-native";
 import Input from "../components/input";
 import { COLORS, SIZES, images, FONTS } from "../constants";
 import ButtonPrimary from "../components/button-primary";
@@ -10,9 +10,11 @@ import { IP_ADDR } from "@env";
 
 // actions
 import { signin } from "../store/actions";
+import { SET_ERRORS } from "../store/actions/actionTypes";
 
 const Signin = ({ navigation }) => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const loginError = useSelector((state) => state.errors.login);
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
 
@@ -35,6 +37,36 @@ const Signin = ({ navigation }) => {
     }
   }, [isAuthenticated]);
 
+  const showAlert = () =>
+    Alert.alert(
+      "Login Error",
+      loginError,
+      [
+        {
+          text: "Cancel",
+          onPress: () =>
+            dispatch({
+              type: SET_ERRORS,
+              payload: {},
+            }),
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: true,
+        onDismiss: () =>
+          dispatch({
+            type: SET_ERRORS,
+            payload: {},
+          }),
+      }
+    );
+
+  // Show Error when user input is invalid
+  {
+    loginError ? showAlert() : null;
+  }
+
   return (
     <View style={[styles.container]}>
       <View style={[styles.header]}>
@@ -45,7 +77,7 @@ const Signin = ({ navigation }) => {
         <View style={{ marginBottom: 20 }}>
           <Input
             title="username"
-            rightIcon="user"
+            leftIcon="user"
             placeHolder="input your username"
             onChangeText={(text) => setUsername(text)}
             value={username}
@@ -55,7 +87,7 @@ const Signin = ({ navigation }) => {
         <View style={{ marginBottom: 20 }}>
           <Input
             title="password"
-            rightIcon="key"
+            leftIcon="key"
             placeHolder="input your password"
             secureTextEntry
             onChangeText={(text) => setPassword(text)}

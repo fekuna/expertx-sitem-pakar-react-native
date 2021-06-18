@@ -24,13 +24,15 @@ import Input from "../components/input";
 import { IP_ADDR } from "@env";
 
 const PenyakitDetail = ({ navigation, route }) => {
-  const { id, name, solusi, gejala } = route.params;
+  const { penyakitId, name, solusi, desc } = route.params;
 
   const dispatch = useDispatch();
   // redux state
   const gejalaPenyakit = useSelector(
     (state) =>
-      state.penyakit.allPenyakit.find((penyakit) => penyakit.id === id).gejala
+      state.penyakit.allPenyakit.find(
+        (penyakit) => penyakit.penyakitId === penyakitId
+      ).gejala
   );
   const userRole = useSelector((state) => state.auth.user.role);
 
@@ -57,11 +59,15 @@ const PenyakitDetail = ({ navigation, route }) => {
             </TouchableWithoutFeedback>
           </View>
           <View>
-            <TouchableWithoutFeedback
-              onPress={() => navigation.navigate("AddGejalaToPenyakit", { id })}
-            >
-              <AntDesign name="pluscircleo" size={35} color="white" />
-            </TouchableWithoutFeedback>
+            {userRole === "admin" && (
+              <TouchableWithoutFeedback
+                onPress={() =>
+                  navigation.navigate("AddGejalaToPenyakit", { penyakitId })
+                }
+              >
+                <AntDesign name="pluscircleo" size={35} color="white" />
+              </TouchableWithoutFeedback>
+            )}
           </View>
         </View>
         <View style={styles.headerBottom}>
@@ -70,7 +76,7 @@ const PenyakitDetail = ({ navigation, route }) => {
           >
             {name}
           </Text>
-          <Text style={{ ...FONTS.h1, color: COLORS.white }}>{id}</Text>
+          <Text style={{ ...FONTS.h1, color: COLORS.white }}>{penyakitId}</Text>
         </View>
       </View>
     );
@@ -79,7 +85,12 @@ const PenyakitDetail = ({ navigation, route }) => {
   const renderBody = () => {
     return (
       <View style={styles.body}>
-        <View style={styles.solusi}>
+        {/* <ScrollView style={{ flex: 1 }} nestedScrollEnabled> */}
+        <View style={styles.section}>
+          <Text style={{ ...FONTS.h2, color: COLORS.primary }}>Deskripsi</Text>
+          <Text style={{ ...FONTS.body3 }}>{desc}</Text>
+        </View>
+        <View style={styles.section}>
           <Text style={{ ...FONTS.h2, color: COLORS.primary }}>Solusi</Text>
           <Text style={{ ...FONTS.body3 }}>{solusi}</Text>
         </View>
@@ -87,36 +98,49 @@ const PenyakitDetail = ({ navigation, route }) => {
           <Text style={{ ...FONTS.h2, color: COLORS.primary }}>
             Gejala-gejala
           </Text>
-          <FlatList
-            scrollEventThrottle={32}
-            scrollEnabled
-            data={gejalaPenyakit}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => {
-              return (
-                <ListActivity
-                  title={item.id}
-                  subtitle={item.desc}
-                  rightText={item.Penyakit_Gejala.cfp}
-                  customRightContent={
-                    userRole === "admin" && (
-                      <View style={{ marginLeft: 5 }}>
-                        <MaterialIcons
-                          name="delete"
-                          size={26}
-                          color="red"
-                          style={{ marginLeft: 10 }}
-                          onPress={() => onDelete(item.id)}
-                        />
-                      </View>
-                    )
-                  }
-                />
-              );
-            }}
-          />
+          {gejalaPenyakit.length ? (
+            renderGejala()
+          ) : (
+            <Text style={{ ...FONTS.body4, color: COLORS.gray }}>
+              Gejala belum ditambah, silahkan tambahkan beberapa.
+            </Text>
+          )}
         </View>
+        {/* </ScrollView> */}
       </View>
+    );
+  };
+
+  const renderGejala = () => {
+    return (
+      <FlatList
+        scrollEventThrottle={32}
+        scrollEnabled
+        data={gejalaPenyakit}
+        keyExtractor={(item) => item.gejalaId}
+        renderItem={({ item }) => {
+          return (
+            <ListActivity
+              title={item.name}
+              subtitle={item.desc}
+              rightText={item.Penyakit_Gejala.cfp}
+              customRightContent={
+                userRole === "admin" && (
+                  <View style={{ marginLeft: 5 }}>
+                    <MaterialIcons
+                      name="delete"
+                      size={26}
+                      color="red"
+                      style={{ marginLeft: 10 }}
+                      onPress={() => onDelete(item.id)}
+                    />
+                  </View>
+                )
+              }
+            />
+          );
+        }}
+      />
     );
   };
 
@@ -186,7 +210,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: SIZES.padding,
     paddingVertical: SIZES.padding,
   },
-  solusi: {
+  section: {
     marginBottom: 20,
     // flex: 1,
   },

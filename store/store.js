@@ -3,6 +3,7 @@ import thunk from "redux-thunk";
 
 import usersReducer from "./reducers/usersReducer";
 import penyakitReducer from "./reducers/penyakitReducer";
+import errorReducer from './reducers/errorReducer'
 
 let composeEnhancers = compose;
 const middleware = [thunk];
@@ -14,6 +15,7 @@ if (__DEV__) {
 const rootReducer = combineReducers({
   auth: usersReducer,
   penyakit: penyakitReducer,
+  errors: errorReducer,
 });
 
 const store = createStore(

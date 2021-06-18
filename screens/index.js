@@ -3,6 +3,7 @@ import Diagnosis from "./Diagnosis";
 import DiagnosisResult from "./DiagosisResult";
 import Penyakit from "./Penyakit";
 import AddPenyakit from "./AddPenyakit";
+import EditPenyakit from "./EditPenyakit";
 import AddGejala from "./AddGejala";
 import EditGejala from "./EditGejala";
 import Gejala from "./Gejala";
@@ -28,4 +29,5 @@ export {
   AddGejalaToPenyakit,
   DiagnosisResult,
   History,
+  EditPenyakit,
 };

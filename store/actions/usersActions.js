@@ -1,6 +1,6 @@
 import * as SecureStore from "expo-secure-store";
 import jwtDecode from "jwt-decode";
-import { GET_USERS, SIGN_IN, SIGN_UP } from "./actionTypes";
+import { GET_USERS, SIGN_IN, SIGN_UP, SET_ERRORS } from "./actionTypes";
 
 // ENV
 import { IP_ADDR } from "@env";
@@ -15,8 +15,18 @@ export const signin = (data) => async (dispatch) => {
       },
       body: JSON.stringify(data),
     });
+    if (!response.ok) {
+      const responseData = await response.json();
+      throw new Error(responseData.message);
+    }
   } catch (e) {
-    console.log(e.message, 'eeasda');
+    const message = e.message;
+    dispatch({
+      type: SET_ERRORS,
+      payload: {
+        login: message,
+      },
+    });
   }
 
   const { token } = await response.json();
@@ -70,8 +80,28 @@ export const signup = (data) => async (dispatch) => {
       },
       body: JSON.stringify(data),
     });
+    if (!response.ok) {
+      const responseData = await response.json();
+      console.log("masokk isn't oke", responseData.errors);
+      throw new Error(JSON.stringify(responseData.errors));
+    }
   } catch (e) {
-    console.log(e.message);
+    const message = JSON.parse(e.message);
+    console.log("Message:", message);
+    let errors = {};
+    message.map((m) => {
+      errors = {
+        ...errors,
+        [m.param]: m.msg,
+      };
+    });
+    console.log(errors, "hehe");
+    dispatch({
+      type: SET_ERRORS,
+      payload: {
+        register: errors,
+      },
+    });
   }
 
   const { token } = await response.json();
@@ -94,8 +124,12 @@ export const getAllUsers = () => async (dispatch) => {
         "Content-Type": "application/json",
       },
     });
+    if (!response.ok) {
+      const responseData = await response.json();
+      throw new Error(responseData.message);
+    }
   } catch (e) {
-    console.log(e, "getAllusers eeeee");
+    console.log(e.message);
   }
 
   const result = await response.json();

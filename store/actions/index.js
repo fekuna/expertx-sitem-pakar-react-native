@@ -1,5 +1,14 @@
 export { signin, signup, logoutUser, getAllUsers } from "./usersActions";
 
-export { getPenyakit, getGejala, calculateDiagnosis } from "./penyakitActions";
+export {
+  getPenyakit,
+  addPenyakit,
+  editPenyakit,
+  deletePenyakit,
+  getGejala,
+  addGejala,
+  editGejala,
+  calculateDiagnosis,
+} from "./penyakitActions";
 
 export { getHistoryUser } from "./historyActions";

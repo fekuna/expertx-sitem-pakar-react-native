@@ -7,6 +7,7 @@ import {
   Image,
   FlatList,
   ScrollView,
+  Alert,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -14,18 +15,22 @@ import RoundButton from "../components/round-button";
 import { COLORS, FONTS, icons, SIZES } from "../constants";
 
 import { FontAwesome } from "@expo/vector-icons";
-import ButtonPrimary from "../components/button-primary";
-import ListActivity from "../components/list-activity";
-import { getPenyakit } from "../store/actions";
+import { useForm, Controller } from "react-hook-form";
+
+import { getPenyakit, addPenyakit } from "../store/actions";
 import Input from "../components/input";
 
 const AddPenyakit = ({ navigation }) => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
   const dispatch = useDispatch();
 
-  // State
-  const [id, setId] = useState(null);
-  const [name, setName] = useState(null);
-  const [solusi, setSolusi] = useState(null);
+  // Redux state
+  const backendErrors = useSelector((state) => state.errors.addPenyakit || {});
 
   useEffect(() => {
     return () => {
@@ -61,26 +66,101 @@ const AddPenyakit = ({ navigation }) => {
       <View style={styles.body}>
         <ScrollView>
           <View style={{ marginBottom: 20 }}>
-            <Input
-              title="id penyakit"
-              placeHolder="masukan id penyakit"
-              onChangeText={(text) => setId(text)}
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  title="id penyakit"
+                  placeHolder="masukan id penyakit"
+                  onChangeText={(text) => onChange(text)}
+                  onBlur={onBlur}
+                  value={value}
+                  error={
+                    errors.penyakitId?.message || backendErrors?.penyakitId
+                  }
+                />
+              )}
+              name="penyakitId"
+              rules={{
+                required: {
+                  value: true,
+                  message: "Penyakit ID is required",
+                },
+              }}
+              defaultValue=""
             />
           </View>
           <View style={{ marginBottom: 20 }}>
-            <Input
-              title="name"
-              placeHolder="masukan nama penyakit"
-              onChangeText={(text) => setName(text)}
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  title="name"
+                  placeHolder="masukan nama penyakit"
+                  onChangeText={(text) => onChange(text)}
+                  onBlur={onBlur}
+                  value={value}
+                  error={errors.name?.message || backendErrors?.name}
+                />
+              )}
+              name="name"
+              rules={{
+                required: {
+                  value: true,
+                  message: "Penyakit name is required",
+                },
+              }}
+              defaultValue=""
             />
           </View>
           <View style={{ marginBottom: 20 }}>
-            <Input
-              title="solusi"
-              placeHolder="masukan solusi"
-              multiline={true}
-              style={{ paddingBottom: 35 }}
-              onChangeText={(text) => setSolusi(text)}
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  title="deskripsi"
+                  placeHolder="masukan deskripsi"
+                  multiline={true}
+                  style={{ paddingBottom: 35 }}
+                  onChangeText={(text) => onChange(text)}
+                  onBlur={onBlur}
+                  value={value}
+                  error={errors.desc?.message || backendErrors?.desc}
+                />
+              )}
+              name="desc"
+              rules={{
+                required: {
+                  value: true,
+                  message: "Deskripsi is required",
+                },
+              }}
+              defaultValue=""
+            />
+          </View>
+          <View style={{ marginBottom: 20 }}>
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  title="solusi"
+                  placeHolder="masukan solusi"
+                  multiline={true}
+                  style={{ paddingBottom: 35 }}
+                  onChangeText={(text) => onChange(text)}
+                  onBlur={onBlur}
+                  value={value}
+                  error={errors.solusi?.message || backendErrors?.solusi}
+                />
+              )}
+              name="solusi"
+              rules={{
+                required: {
+                  value: true,
+                  message: "Solusi is required",
+                },
+              }}
+              defaultValue=""
             />
           </View>
         </ScrollView>
@@ -88,32 +168,26 @@ const AddPenyakit = ({ navigation }) => {
     );
   };
 
-  const onSubmit = async () => {
-    const data = {
-      id: id.toUpperCase(),
-      name,
-      solusi,
-    };
+  const onSubmit = async (data) => {
+    console.log(data);
 
-    let response;
-    try {
-      response = await fetch("http://192.168.1.4:5000/api/penyakit/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+    const result = await dispatch(addPenyakit(data));
+    console.log("result neh:", result);
+    Alert.alert(
+      result.status,
+      result.msg,
+      [
+        {
+          text: "ok",
+          onPress: () => navigation.goBack(),
+          style: "cancel",
         },
-        body: JSON.stringify(data),
-      });
-    } catch (e) {
-      console.log(e);
-    }
-
-    // const result = await response.json()
-    // console.log(result)
-    setId("");
-    setName("");
-    setSolusi("");
-    navigation.goBack();
+      ],
+      {
+        cancelable: true,
+        onDismiss: () => navigation.goBack(),
+      }
+    );
   };
 
   return (
@@ -126,7 +200,7 @@ const AddPenyakit = ({ navigation }) => {
           bottom: 40,
           right: 30,
         }}
-        onPress={() => onSubmit()}
+        onPress={handleSubmit(onSubmit)}
       >
         <FontAwesome name="check" size={34} color="white" />
       </RoundButton>

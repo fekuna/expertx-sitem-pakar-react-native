@@ -7,6 +7,7 @@ import {
   Image,
   FlatList,
   ScrollView,
+  Alert,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useSelector, useDispatch } from "react-redux";
@@ -16,21 +17,25 @@ import { COLORS, FONTS, icons, SIZES, certainty } from "../constants";
 
 import { FontAwesome } from "@expo/vector-icons";
 import { getGejala, getPenyakit } from "../store/actions";
+import { SET_ERRORS } from "../store/actions/actionTypes";
 import Input from "../components/input";
 
 // Env
 import { IP_ADDR } from "@env";
 
 const AddGejalaToPenyakit = ({ navigation, route }) => {
-  const { id } = route.params;
+  const { penyakitId } = route.params;
   const dispatch = useDispatch();
 
   //Redux State
   const allGejala = useSelector((state) => state.penyakit.allGejala);
+  const backendErrors = useSelector(
+    (state) => state.errors.addGejalaToPenyakit
+  );
 
   // State
-  const [gejalaId, setGejalaId] = useState();
-  const [cfp, setCfp] = useState();
+  const [gejalaId, setGejalaId] = useState(allGejala[0].gejalaId);
+  const [cfp, setCfp] = useState(certainty[0].cf);
 
   useEffect(() => {
     dispatch(getGejala());
@@ -57,7 +62,7 @@ const AddGejalaToPenyakit = ({ navigation, route }) => {
         </View>
         <View style={styles.headerBottom}>
           <Text style={{ ...FONTS.h1, color: COLORS.white }}>
-            Add Gejala To {id}
+            Add Gejala To {penyakitId}
           </Text>
         </View>
       </View>
@@ -119,9 +124,9 @@ const AddGejalaToPenyakit = ({ navigation, route }) => {
               {allGejala.map((gejala) => {
                 return (
                   <Picker.Item
-                    label={`${gejala.id} - ${gejala.name}`}
-                    value={gejala.id}
-                    key={gejala.id}
+                    label={`${gejala.gejalaId} - ${gejala.name}`}
+                    value={gejala.gejalaId}
+                    key={gejala.gejalaId}
                   />
                 );
               })}
@@ -134,11 +139,11 @@ const AddGejalaToPenyakit = ({ navigation, route }) => {
 
   const onSubmit = async () => {
     const data = {
-      penyakitId: id,
+      penyakitId,
       gejalaId,
       cfp,
     };
-    // console.log(data);
+    console.log(data);
 
     let response;
     try {
@@ -149,16 +154,64 @@ const AddGejalaToPenyakit = ({ navigation, route }) => {
         },
         body: JSON.stringify(data),
       });
+      if (!response.ok) {
+        const responseData = await response.json();
+        throw new Error(JSON.stringify(responseData.errors));
+      }
     } catch (e) {
-      console.log(e);
+      const message = JSON.parse(e.message);
+      console.log(message, "message");
+      let errors = {};
+      message.map((m) => {
+        errors = {
+          ...errors,
+          [m.param]: m.msg,
+        };
+      });
+      dispatch({
+        type: SET_ERRORS,
+        payload: {
+          addGejalaToPenyakit: errors,
+        },
+      });
     }
 
-    // const result = await response.json();
-    // console.log(result, 'result');
-    setGejalaId("");
-    setCfp("");
+    const result = await response.json();
+    console.log(result, "result");
+    // setGejalaId("");
+    // setCfp("");
     navigation.goBack();
   };
+
+  const showAlert = () => {
+    Alert.alert(
+      "Something went wrong",
+      backendErrors.gejalaId,
+      [
+        {
+          text: "Cancel",
+          onPress: () =>
+            dispatch({
+              type: SET_ERRORS,
+              payload: {},
+            }),
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: true,
+        onDismiss: () =>
+          dispatch({
+            type: SET_ERRORS,
+            payload: {},
+          }),
+      }
+    );
+  };
+
+  {
+    backendErrors ? showAlert() : null;
+  }
 
   return (
     <View style={styles.container}>

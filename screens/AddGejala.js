@@ -9,25 +9,28 @@ import {
   ScrollView,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
+import { FontAwesome } from "@expo/vector-icons";
+import { useForm, Controller } from "react-hook-form";
 
 import RoundButton from "../components/round-button";
 import { COLORS, FONTS, icons, SIZES } from "../constants";
 
-import { FontAwesome } from "@expo/vector-icons";
-import ButtonPrimary from "../components/button-primary";
-import ListActivity from "../components/list-activity";
-import { getGejala } from "../store/actions";
+import { getGejala, addGejala } from "../store/actions";
 import Input from "../components/input";
 
 // Env
 import { IP_ADDR } from "@env";
 
 const AddGejala = ({ navigation, route }) => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const backendErrors = useSelector((state) => state.errors.addGejala || {});
+
   const dispatch = useDispatch();
-  // State
-  const [id, setId] = useState("");
-  const [name, setName] = useState("");
-  const [question, setQuestion] = useState("");
 
   const renderHeader = () => {
     return (
@@ -57,29 +60,83 @@ const AddGejala = ({ navigation, route }) => {
       <View style={styles.body}>
         <ScrollView>
           <View style={{ marginBottom: 20 }}>
-            <Input
-              title="id gejala"
-              placeHolder="masukan id gejala"
-              onChangeText={(text) => setId(text)}
-              value={id}
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  title="ID gejala"
+                  placeHolder="masukan id gejala"
+                  onChangeText={(text) => {
+                    backendErrors.gejalaId = "";
+                    onChange(text);
+                  }}
+                  onBlur={onBlur}
+                  value={value}
+                  error={errors.gejalaId?.message || backendErrors?.gejalaId}
+                />
+              )}
+              name="gejalaId"
+              rules={{
+                required: {
+                  value: true,
+                  message: "Penyakit ID is required",
+                },
+              }}
+              defaultValue=""
             />
           </View>
           <View style={{ marginBottom: 20 }}>
-            <Input
-              title="name"
-              placeHolder="masukan nama gejala"
-              onChangeText={(text) => setName(text)}
-              value={name}
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  title="name"
+                  placeHolder="masukan nama gejala"
+                  onChangeText={(text) => {
+                    backendErrors.name = "";
+                    onChange(text);
+                  }}
+                  onBlur={onBlur}
+                  value={value}
+                  error={errors.name?.message || backendErrors?.name}
+                />
+              )}
+              name="name"
+              rules={{
+                required: {
+                  value: true,
+                  message: "Gejala name is required",
+                },
+              }}
+              defaultValue=""
             />
           </View>
           <View style={{ marginBottom: 20 }}>
-            <Input
-              title="question"
-              placeHolder="masukan pertanyaan"
-              multiline={true}
-              style={{ paddingBottom: 35 }}
-              onChangeText={(text) => setQuestion(text)}
-              value={question}
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  title="question"
+                  placeHolder="masukan pertanyaan"
+                  multiline={true}
+                  style={{ paddingBottom: 35 }}
+                  onChangeText={(text) => {
+                    backendErrors.question = "";
+                    onChange(text);
+                  }}
+                  onBlur={onBlur}
+                  value={value}
+                  error={errors.question?.message || backendErrors?.question}
+                />
+              )}
+              name="question"
+              rules={{
+                required: {
+                  value: true,
+                  message: "Question is required",
+                },
+              }}
+              defaultValue=""
             />
           </View>
         </ScrollView>
@@ -87,32 +144,37 @@ const AddGejala = ({ navigation, route }) => {
     );
   };
 
-  const onSubmit = async () => {
-    const data = {
-      id: id.toUpperCase(),
-      name,
-      question,
-    };
+  const onSubmit = async (data) => {
+    console.log(data);
 
-    let response;
-    try {
-      response = await fetch(`${IP_ADDR}/api/gejala/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-    } catch (e) {
-      console.log(e);
-    }
+    const response = await dispatch(addGejala(data));
+    console.log("response", response);
+
+    // const data = {
+    //   id: id.toUpperCase(),
+    //   name,
+    //   question,
+    // };
+
+    // let response;
+    // try {
+    //   response = await fetch(`${IP_ADDR}/api/gejala/`, {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(data),
+    //   });
+    // } catch (e) {
+    //   console.log(e);
+    // }
 
     // const result = await response.json()
-    setId("");
-    setName("");
-    setQuestion("");
+    // setId("");
+    // setName("");
+    // setQuestion("");
     dispatch(getGejala());
-    navigation.goBack()
+    navigation.goBack();
   };
 
   return (
@@ -125,7 +187,7 @@ const AddGejala = ({ navigation, route }) => {
           bottom: 40,
           right: 30,
         }}
-        onPress={() => onSubmit()}
+        onPress={handleSubmit(onSubmit)}
       >
         <FontAwesome name="check" size={34} color="white" />
       </RoundButton>

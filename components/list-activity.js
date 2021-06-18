@@ -27,7 +27,7 @@ const ListActivity = ({
           marginRight: "auto",
         }}
       >
-        <Text style={{ ...FONTS.h3 }}>{title}</Text>
+        <Text style={{ ...FONTS.h4 }}>{title}</Text>
         <Text
           style={{
             ...FONTS.body5,
@@ -38,7 +38,7 @@ const ListActivity = ({
         </Text>
       </View>
       <View>
-        <Text style={{ ...FONTS.h1, color: COLORS.gray }}>{rightText}</Text>
+        <Text style={{ ...FONTS.h2, color: COLORS.gray }}>{rightText}</Text>
       </View>
       {customRightContent ? customRightContent : null}
       {icon ? (

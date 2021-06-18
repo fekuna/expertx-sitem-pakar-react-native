@@ -110,7 +110,7 @@ const Diagnosis = ({ navigation }) => {
     }
 
     const answerFound = answers.findIndex(
-      (answer) => answer.gejalaId == allGejala[questionIndex].id
+      (answer) => answer.gejalaId == allGejala[questionIndex].gejalaId
     );
 
     if (answerFound > -1) {
@@ -123,7 +123,7 @@ const Diagnosis = ({ navigation }) => {
         prevAnswers = [
           ...prevAnswers,
           {
-            gejalaId: allGejala[questionIndex].id,
+            gejalaId: allGejala[questionIndex].gejalaId,
             cfu: item.cf,
           },
         ];
@@ -162,7 +162,7 @@ const Diagnosis = ({ navigation }) => {
       <View style={styles.question}>
         <FlatList
           data={allGejala}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.gejalaId.toString()}
           scrollEventThrottle={32}
           horizontal
           pagingEnabled

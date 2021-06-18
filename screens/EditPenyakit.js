@@ -7,31 +7,47 @@ import {
   Image,
   FlatList,
   ScrollView,
+  Alert,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { useForm, Controller } from "react-hook-form";
 
 import RoundButton from "../components/round-button";
 import { COLORS, FONTS, icons, SIZES } from "../constants";
 
 import { FontAwesome } from "@expo/vector-icons";
-import { getGejala, editGejala } from "../store/actions";
+import { useForm, Controller } from "react-hook-form";
+
+import { getPenyakit, editPenyakit } from "../store/actions";
 import Input from "../components/input";
 
-// Env
-import { IP_ADDR } from "@env";
+const EditPenyakit = ({ navigation, route }) => {
+  const { penyakitId, name, desc, solusi } = route.params;
 
-const EditGejala = ({ navigation, route }) => {
   const {
     control,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm();
+
   const dispatch = useDispatch();
 
-  const { gejalaId, nameEdit, questionEdit } = route.params;
+  // Redux state
+  const backendErrors = useSelector(
+    (state) =>
+      state.errors.editPenyakit || {
+        penyakitId: "",
+        name: "",
+        desc: "",
+        solusi: "",
+      }
+  );
 
-  const backendErrors = useSelector((state) => state.errors.editGejala || {});
+  useEffect(() => {
+    return () => {
+      dispatch(getPenyakit());
+    };
+  }, []);
 
   const renderHeader = () => {
     return (
@@ -50,7 +66,9 @@ const EditGejala = ({ navigation, route }) => {
           </TouchableWithoutFeedback>
         </View>
         <View style={styles.headerBottom}>
-          <Text style={{ ...FONTS.h1, color: COLORS.white }}>Edit Gejala</Text>
+          <Text style={{ ...FONTS.h1, color: COLORS.white }}>
+            Edit Penyakit - {penyakitId}
+          </Text>
         </View>
       </View>
     );
@@ -65,26 +83,25 @@ const EditGejala = ({ navigation, route }) => {
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input
-                  title="ID gejala"
-                  placeHolder="masukan id gejala"
-                  onChangeText={(text) => {
-                    backendErrors.gejalaId = "";
-                    onChange(text);
-                  }}
+                  title="id penyakit"
+                  placeHolder="masukan id penyakit"
+                  onChangeText={(text) => onChange(text)}
                   onBlur={onBlur}
-                  editable={false}
                   value={value}
-                  error={errors.gejalaId?.message || backendErrors?.gejalaId}
+                  error={
+                    errors.penyakitId?.message || backendErrors?.penyakitId
+                  }
+                  editable={false}
                 />
               )}
-              name="gejalaId"
+              name="penyakitId"
               rules={{
                 required: {
                   value: true,
                   message: "Penyakit ID is required",
                 },
               }}
-              defaultValue={gejalaId}
+              defaultValue={penyakitId}
             />
           </View>
           <View style={{ marginBottom: 20 }}>
@@ -93,11 +110,8 @@ const EditGejala = ({ navigation, route }) => {
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input
                   title="name"
-                  placeHolder="masukan nama gejala"
-                  onChangeText={(text) => {
-                    backendErrors.name = "";
-                    onChange(text);
-                  }}
+                  placeHolder="masukan nama penyakit"
+                  onChangeText={(text) => onChange(text)}
                   onBlur={onBlur}
                   value={value}
                   error={errors.name?.message || backendErrors?.name}
@@ -107,10 +121,10 @@ const EditGejala = ({ navigation, route }) => {
               rules={{
                 required: {
                   value: true,
-                  message: "Gejala name is required",
+                  message: "Penyakit name is required",
                 },
               }}
-              defaultValue={nameEdit}
+              defaultValue={name}
             />
           </View>
           <View style={{ marginBottom: 20 }}>
@@ -118,27 +132,49 @@ const EditGejala = ({ navigation, route }) => {
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input
-                  title="question"
-                  placeHolder="masukan pertanyaan"
+                  title="deskripsi"
+                  placeHolder="masukan deskripsi"
                   multiline={true}
                   style={{ paddingBottom: 35 }}
-                  onChangeText={(text) => {
-                    backendErrors.question = "";
-                    onChange(text);
-                  }}
+                  onChangeText={(text) => onChange(text)}
                   onBlur={onBlur}
                   value={value}
-                  error={errors.question?.message || backendErrors?.question}
+                  error={errors.desc?.message || backendErrors?.desc}
                 />
               )}
-              name="question"
+              name="desc"
               rules={{
                 required: {
                   value: true,
-                  message: "Question is required",
+                  message: "Deskripsi is required",
                 },
               }}
-              defaultValue={questionEdit}
+              defaultValue={desc}
+            />
+          </View>
+          <View style={{ marginBottom: 20 }}>
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  title="solusi"
+                  placeHolder="masukkan solusi"
+                  multiline={true}
+                  style={{ paddingBottom: 35 }}
+                  onChangeText={(text) => onChange(text)}
+                  onBlur={onBlur}
+                  value={value}
+                  error={errors.solusi?.message || backendErrors?.solusi}
+                />
+              )}
+              name="solusi"
+              rules={{
+                required: {
+                  value: true,
+                  message: "Solusi is required",
+                },
+              }}
+              defaultValue={solusi}
             />
           </View>
         </ScrollView>
@@ -147,13 +183,25 @@ const EditGejala = ({ navigation, route }) => {
   };
 
   const onSubmit = async (data) => {
-    console.log(data, "edit submitted");
-    const response = await dispatch(editGejala(data));
+    console.log(data);
 
-    const result = await response.json();
-    console.log(result);
-    dispatch(getGejala());
-    navigation.goBack();
+    const result = await dispatch(editPenyakit(data));
+    console.log("result neh:", result);
+    Alert.alert(
+      result.status,
+      result.msg,
+      [
+        {
+          text: "ok",
+          onPress: () => navigation.goBack(),
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: true,
+        onDismiss: () => navigation.goBack(),
+      }
+    );
   };
 
   return (
@@ -214,4 +262,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditGejala;
+export default EditPenyakit;

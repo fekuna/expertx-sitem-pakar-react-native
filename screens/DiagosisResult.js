@@ -17,10 +17,11 @@ const DiagnosisResult = ({ navigation, route }) => {
   const diagnosisResult = useSelector(
     (state) => state.penyakit.latestDiagnosis
   );
+  const userId = useSelector((state) => state.auth.user.userId);
 
   useEffect(() => {
     return () => {
-      dispatch(getHistoryUser());
+      dispatch(getHistoryUser({ id: userId }));
     };
   }, []);
 

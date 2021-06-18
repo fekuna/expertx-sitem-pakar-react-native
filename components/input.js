@@ -3,20 +3,30 @@ import { StyleSheet, Text, TextInput, View } from "react-native";
 import { COLORS, FONTS } from "../constants";
 import { FontAwesome5 } from "@expo/vector-icons";
 
-
-const Input = ({title, rightIcon, placeHolder, style, ...props}) => {
+const Input = ({ title, leftIcon, placeHolder, style, error, ...props }) => {
   return (
     <View>
       <Text style={styles.title}>{title}</Text>
       <View style={styles.inputContainer}>
-        {rightIcon ? <FontAwesome5
-          name={rightIcon}
-          size={24}
-          color={COLORS.gray}
-          style={[styles.rightIcon]}
-        /> : null}
-        <TextInput placeholder={placeHolder} style={[styles.input, style]} {...props} />
+        {leftIcon ? (
+          <FontAwesome5
+            name={leftIcon}
+            size={24}
+            color={COLORS.gray}
+            style={[styles.leftIcon]}
+          />
+        ) : null}
+        <TextInput
+          placeholder={placeHolder}
+          style={[styles.input, style]}
+          {...props}
+        />
       </View>
+      {!!error ? (
+        <View>
+          <Text style={{ ...FONTS.body5, color: COLORS.red }}>{error}</Text>
+        </View>
+      ) : null}
     </View>
   );
 };
@@ -32,7 +42,7 @@ const styles = StyleSheet.create({
   },
   title: {
     ...FONTS.h3,
-    textTransform: 'capitalize',
+    textTransform: "capitalize",
     paddingBottom: 4,
     color: COLORS.primary,
   },
@@ -43,8 +53,8 @@ const styles = StyleSheet.create({
     // borderBottomColor: COLORS.primary,
     flex: 1,
   },
-  rightIcon: {
-    marginRight: 10
+  leftIcon: {
+    marginRight: 10,
   },
   leftIcon: {},
 });
