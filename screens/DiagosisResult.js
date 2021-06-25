@@ -6,8 +6,10 @@ import {
   TouchableWithoutFeedback,
   Image,
   ScrollView,
+  FlatList,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
+import ListActivity from "../components/list-activity";
 
 import { COLORS, FONTS, icons, SIZES } from "../constants";
 import { getHistoryUser } from "../store/actions";
@@ -15,7 +17,7 @@ import { getHistoryUser } from "../store/actions";
 const DiagnosisResult = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const diagnosisResult = useSelector(
-    (state) => state.penyakit.latestDiagnosis
+    (state) => state.penyakit.latestDiagnosis || null
   );
   const userId = useSelector((state) => state.auth.user.userId);
 
@@ -51,19 +53,19 @@ const DiagnosisResult = ({ navigation, route }) => {
           <Text
             style={{
               color: COLORS.white,
-              fontSize: 100,
+              fontSize: 85,
               fontFamily: "Roboto-Bold",
             }}
           >
-            {(diagnosisResult.cfcombine * 100).toFixed(2)}%
+            {(diagnosisResult.maxResult.cfcombine * 100).toFixed(2)}%
           </Text>
         </View>
         <View style={styles.headerBottom}>
           <Text style={{ ...FONTS.h1, color: COLORS.white }}>
-            {diagnosisResult.name}
+            {diagnosisResult.maxResult.name}
           </Text>
           <Text style={{ ...FONTS.h1, color: COLORS.white }}>
-            {diagnosisResult.penyakitId}
+            {diagnosisResult.maxResult.penyakitId}
           </Text>
         </View>
       </View>
@@ -73,37 +75,49 @@ const DiagnosisResult = ({ navigation, route }) => {
   const renderBody = () => {
     return (
       <View style={styles.body}>
-        <View style={styles.solusi}>
+        {/* <View style={styles.section}>
+          <Text style={{ ...FONTS.h2, color: COLORS.primary }}>
+            Deskripsi
+          </Text>
+          <Text style={{ ...FONTS.body3 }}>
+            {diagnosisResult.maxResult.desc}
+          </Text>
+        </View> */}
+        <View style={styles.section}>
           <Text style={{ ...FONTS.h2, color: COLORS.primary }}>
             Solusi & Saran
           </Text>
-          <Text style={{ ...FONTS.body3 }}>{diagnosisResult.solusi}</Text>
-        </View>
-        {/* <View style={styles.gejalaContainer}>
-          <Text style={{ ...FONTS.h2, color: COLORS.primary }}>
-            Gejala-gejala
+          <Text style={{ ...FONTS.body3 }}>
+            {diagnosisResult.maxResult.solusi}
           </Text>
-        </View> */}
+        </View>
+        <View>
+          <Text style={{ ...FONTS.h2, color: COLORS.primary }}>
+            Kemungkinan Lain
+          </Text>
+          <FlatList
+            scrollEventThrottle={32}
+            scrollEnabled
+            data={diagnosisResult.result}
+            keyExtractor={(item) => item.penyakitId}
+            renderItem={({ item }) => {
+              return (
+                <ListActivity
+                  title={item.name}
+                  rightText={(item.cfcombine * 100).toFixed(2) + "%"}
+                />
+              );
+            }}
+          />
+        </View>
       </View>
     );
   };
-
-  const onSubmit = () => {};
 
   return (
     <View style={styles.container}>
       {renderHeader()}
       {renderBody()}
-      {/* <RoundButton
-        style={{
-          position: "absolute",
-          bottom: 40,
-          right: 30,
-        }}
-        onPress={() => onSubmit()}
-      >
-        <AntDesign name="plus" size={34} color="white" />
-      </RoundButton> */}
     </View>
   );
 };
@@ -136,7 +150,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: SIZES.padding,
     paddingVertical: SIZES.padding,
   },
-  solusi: {
+  section: {
     marginBottom: 20,
   },
   gejalaContainer: {

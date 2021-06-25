@@ -139,7 +139,7 @@ const Diagnosis = ({ navigation }) => {
   const onSubmit = () => {
     const data = {
       userId,
-      gejala: answers,
+      userGejala: answers,
     };
 
     dispatch(calculateDiagnosis(data));
