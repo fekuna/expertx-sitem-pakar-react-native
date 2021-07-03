@@ -66,7 +66,7 @@ const Penyakit = ({ navigation }) => {
             onPress={() => navigation.navigate("Gejala")}
           >
             <Text style={{ color: COLORS.white, ...FONTS.h4 }}>
-              VIEW GEJALA
+              LIHAT GEJALA
             </Text>
           </ButtonPrimary>
         </View>

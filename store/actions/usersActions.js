@@ -1,6 +1,12 @@
 import * as SecureStore from "expo-secure-store";
 import jwtDecode from "jwt-decode";
-import { GET_USERS, SIGN_IN, SIGN_UP, SET_ERRORS } from "./actionTypes";
+import {
+  GET_USERS,
+  SIGN_IN,
+  SIGN_UP,
+  SET_ERRORS,
+  SET_USER,
+} from "./actionTypes";
 
 // ENV
 import { IP_ADDR } from "@env";
@@ -140,3 +146,106 @@ export const getAllUsers = () => async (dispatch) => {
     payload: result,
   });
 };
+
+export const getUserById = (userId) => async (dispatch) => {
+  let response;
+  try {
+    response = await fetch(`${IP_ADDR}/api/users/${userId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      const responseData = await response.json();
+      throw new Error(responseData.message);
+    }
+  } catch (e) {
+    console.log(e.message);
+  }
+
+  const result = await response.json();
+
+  dispatch({
+    type: SET_USER,
+    payload: result,
+  });
+};
+
+export const updateProfile =
+  ({ userId, ...data }) =>
+  async (dispatch) => {
+    console.log("userId: ", userId);
+    console.log(data);
+    let response;
+    try {
+      response = await fetch(`${IP_ADDR}/api/users/${userId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        const responseData = await response.json();
+        console.log(responseData, "errorEditGejala nich");
+        throw new Error(JSON.stringify(responseData.errors));
+      }
+    } catch (e) {
+      const message = JSON.parse(e.message);
+      let errors = {};
+      message.map((m) => {
+        errors = {
+          ...errors,
+          [m.param]: m.msg,
+        };
+      });
+      dispatch({
+        type: SET_ERRORS,
+        payload: {
+          updateProfile: errors,
+        },
+      });
+    }
+
+    // console.log("tembuss");
+
+    const result = await response.json();
+
+    return result;
+  };
+
+export const updatePassword =
+  ({ userId, ...data }) =>
+  async (dispatch) => {
+    console.log("userId: ", userId);
+    console.log(data);
+    let response;
+    try {
+      response = await fetch(`${IP_ADDR}/api/users/password/${userId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        const responseData = await response.json();
+        throw new Error(JSON.stringify(responseData.message));
+      }
+    } catch (e) {
+      const message = JSON.parse(e.message);
+      dispatch({
+        type: SET_ERRORS,
+        payload: {
+          updatePassword: message,
+        },
+      });
+    }
+
+    // console.log("tembuss");
+
+    const result = await response.json();
+
+    return result;
+  };

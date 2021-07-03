@@ -1,4 +1,11 @@
-export { signin, signup, logoutUser, getAllUsers } from "./usersActions";
+export {
+  signin,
+  signup,
+  logoutUser,
+  getAllUsers,
+  updateProfile,
+  updatePassword,
+} from "./usersActions";
 
 export {
   getPenyakit,

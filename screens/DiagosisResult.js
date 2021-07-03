@@ -15,6 +15,10 @@ import { COLORS, FONTS, icons, SIZES } from "../constants";
 import { getHistoryUser } from "../store/actions";
 
 const DiagnosisResult = ({ navigation, route }) => {
+  console.log(route.params, "aowdkoakdoawkd");
+
+  const { maxResult, result } = route.params;
+
   const dispatch = useDispatch();
   const diagnosisResult = useSelector(
     (state) => state.penyakit.latestDiagnosis || null
@@ -57,15 +61,15 @@ const DiagnosisResult = ({ navigation, route }) => {
               fontFamily: "Roboto-Bold",
             }}
           >
-            {(diagnosisResult.maxResult.cfcombine * 100).toFixed(2)}%
+            {(maxResult.cfcombine * 100).toFixed(2)}%
           </Text>
         </View>
         <View style={styles.headerBottom}>
           <Text style={{ ...FONTS.h1, color: COLORS.white }}>
-            {diagnosisResult.maxResult.name}
+            {maxResult.name}
           </Text>
           <Text style={{ ...FONTS.h1, color: COLORS.white }}>
-            {diagnosisResult.maxResult.penyakitId}
+            {maxResult.penyakitId}
           </Text>
         </View>
       </View>
@@ -75,21 +79,19 @@ const DiagnosisResult = ({ navigation, route }) => {
   const renderBody = () => {
     return (
       <View style={styles.body}>
-        {/* <View style={styles.section}>
+        <View style={styles.section}>
           <Text style={{ ...FONTS.h2, color: COLORS.primary }}>
             Deskripsi
           </Text>
           <Text style={{ ...FONTS.body3 }}>
-            {diagnosisResult.maxResult.desc}
+            {maxResult.desc}
           </Text>
-        </View> */}
+        </View>
         <View style={styles.section}>
           <Text style={{ ...FONTS.h2, color: COLORS.primary }}>
             Solusi & Saran
           </Text>
-          <Text style={{ ...FONTS.body3 }}>
-            {diagnosisResult.maxResult.solusi}
-          </Text>
+          <Text style={{ ...FONTS.body3 }}>{maxResult.solusi}</Text>
         </View>
         <View>
           <Text style={{ ...FONTS.h2, color: COLORS.primary }}>
@@ -98,7 +100,7 @@ const DiagnosisResult = ({ navigation, route }) => {
           <FlatList
             scrollEventThrottle={32}
             scrollEnabled
-            data={diagnosisResult.result}
+            data={result}
             keyExtractor={(item) => item.penyakitId}
             renderItem={({ item }) => {
               return (

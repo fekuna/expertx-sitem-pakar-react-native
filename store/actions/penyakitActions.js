@@ -240,6 +240,8 @@ export const calculateDiagnosis = (data) => async (dispatch) => {
   }
 
   const result = await response.json();
-  console.log(result);
+
   dispatch({ type: CALCULATE_DIAGNOSIS, payload: result });
+
+  return result;
 };

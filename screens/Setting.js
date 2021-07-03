@@ -1,35 +1,67 @@
 import React from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import ButtonPrimary from "../components/button-primary";
-import { COLORS, FONTS } from "../constants";
+import { COLORS, FONTS, SIZES } from "../constants";
 
 import { useDispatch } from "react-redux";
 import { logoutUser } from "../store/actions";
 
 const Home = ({ navigation }) => {
   const dispatch = useDispatch();
-  return (
-    <View style={styles.container}>
+
+  const ButtonSetting = ({ title, styles, onPress, ...props }) => {
+    return (
       <ButtonPrimary
         style={{
-          backgroundColor: "red",
-          marginTop: 30,
+          backgroundColor: "green",
+          marginTop: 15,
           paddingVertical: 15,
-          paddingHorizontal: 20,
+          ...styles,
         }}
-        onPress={() => {
-          dispatch(logoutUser());
-        }}
+        onPress={onPress}
       >
         <Text
           style={{
             color: COLORS.white,
+            textAlign: "center",
             ...FONTS.h3,
           }}
         >
-          Logout
+          {title}
         </Text>
       </ButtonPrimary>
+    );
+  };
+  return (
+    <View style={styles.container}>
+      <ButtonSetting
+        title="Update Profile"
+        styles={{
+          width: SIZES.width * 0.5,
+        }}
+        onPress={() => {
+          navigation.navigate("UpdateProfile");
+        }}
+      />
+      <ButtonSetting
+        title="Change Password"
+        styles={{
+          width: SIZES.width * 0.5,
+        }}
+        onPress={() => {
+          navigation.navigate("UpdatePassword")
+        }}
+      />
+      <ButtonSetting
+        title="Logout"
+        styles={{
+          width: SIZES.width * 0.5,
+          backgroundColor: "red",
+        }}
+        onPress={() => {
+          dispatch(logoutUser());
+        }}
+      />
     </View>
   );
 };

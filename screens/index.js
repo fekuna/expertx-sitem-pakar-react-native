@@ -13,6 +13,8 @@ import Signup from "./Signup";
 import PenyakitDetail from "./PenyakitDetail";
 import AddGejalaToPenyakit from "./AddGejalaToPenyakit";
 import History from "./History";
+import UpdateProfile from "./UpdateProfile";
+import UpdatePassword from "./UpdatePassword";
 
 export {
   Home,
@@ -30,4 +32,6 @@ export {
   DiagnosisResult,
   History,
   EditPenyakit,
+  UpdateProfile,
+  UpdatePassword,
 };

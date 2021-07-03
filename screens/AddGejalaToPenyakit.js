@@ -62,7 +62,7 @@ const AddGejalaToPenyakit = ({ navigation, route }) => {
         </View>
         <View style={styles.headerBottom}>
           <Text style={{ ...FONTS.h1, color: COLORS.white }}>
-            Add Gejala To {penyakitId}
+            Tambah gejala ke {penyakitId}
           </Text>
         </View>
       </View>

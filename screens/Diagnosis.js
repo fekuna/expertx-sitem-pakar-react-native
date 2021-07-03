@@ -136,20 +136,20 @@ const Diagnosis = ({ navigation }) => {
     // console.log(item);
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const data = {
       userId,
       userGejala: answers,
     };
 
-    dispatch(calculateDiagnosis(data));
+    const result = await dispatch(calculateDiagnosis(data));
     scrollViewRef.current.scrollToIndex({
       index: 0,
       animated: true,
     });
     setQuestionIndex(0);
     setAnswers([]);
-    navigation.navigate("DiagnosisResult");
+    navigation.navigate("DiagnosisResult", { ...result });
   };
 
   console.log(answers);

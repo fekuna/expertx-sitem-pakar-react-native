@@ -2,6 +2,7 @@ import {
   SIGN_IN,
   GET_USERS,
   GET_HISTORY_DIAGNOSIS_USER,
+  SET_USER,
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -23,6 +24,15 @@ export default (state = initialState, action) => {
       return {
         ...state,
         allUsers: action.payload,
+      };
+    case SET_USER:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          name: action.payload.name,
+          email: action.payload.email,
+        },
       };
     case GET_HISTORY_DIAGNOSIS_USER:
       return {

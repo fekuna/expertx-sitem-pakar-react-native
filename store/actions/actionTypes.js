@@ -3,6 +3,7 @@ export const SIGN_UP = "SIGN_UP";
 
 // USERS
 export const GET_USERS = "GET_USERS";
+export const SET_USER = "SET_USER";
 
 // Penyakit & GEJALA
 export const GET_PENYAKIT = "GET_PENYAKIT";

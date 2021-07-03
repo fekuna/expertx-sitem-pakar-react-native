@@ -5,38 +5,61 @@ import {
   Text,
   TouchableWithoutFeedback,
   Image,
-  FlatList,
-  ScrollView,
   Alert,
+  ScrollView,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
+import { useForm, Controller } from "react-hook-form";
 
 import RoundButton from "../components/round-button";
 import { COLORS, FONTS, icons, SIZES } from "../constants";
 
 import { FontAwesome } from "@expo/vector-icons";
-import { useForm, Controller } from "react-hook-form";
-
-import { getPenyakit, addPenyakit } from "../store/actions";
+import { updateProfile } from "../store/actions";
 import Input from "../components/input";
 
-const AddPenyakit = ({ navigation }) => {
+// Env
+import { IP_ADDR } from "@env";
+import { getUserById } from "../store/actions/usersActions";
+import { SET_ERRORS } from "../store/actions/actionTypes";
+
+const UpdateProfile = ({ navigation, route }) => {
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm();
-
   const dispatch = useDispatch();
 
-  // Redux state
-  const backendErrors = useSelector((state) => state.errors.addPenyakit || {});
+  const user = useSelector((state) => state.auth.user);
+  // const backendErrors = useSelector(
+  //   (state) => state.errors.updateProfile || {}
+  // );
 
-  useEffect(() => {
-    return () => {
-      dispatch(getPenyakit());
-    };
-  }, []);
+  const showAlert = (title, content) =>
+    Alert.alert(
+      title,
+      content,
+      [
+        {
+          text: "Cancel",
+          onPress: () =>
+            dispatch({
+              type: SET_ERRORS,
+              payload: {},
+            }),
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: true,
+        onDismiss: () =>
+          dispatch({
+            type: SET_ERRORS,
+            payload: {},
+          }),
+      }
+    );
 
   const renderHeader = () => {
     return (
@@ -55,13 +78,16 @@ const AddPenyakit = ({ navigation }) => {
           </TouchableWithoutFeedback>
         </View>
         <View style={styles.headerBottom}>
-          <Text style={{ ...FONTS.h1, color: COLORS.white }}>Tambah Penyakit</Text>
+          <Text style={{ ...FONTS.h1, color: COLORS.white }}>
+            Update Profile
+          </Text>
         </View>
       </View>
     );
   };
 
   const renderBody = () => {
+    // console.log(user.username);
     return (
       <View style={styles.body}>
         <ScrollView>
@@ -70,24 +96,25 @@ const AddPenyakit = ({ navigation }) => {
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input
-                  title="id penyakit"
-                  placeHolder="masukan id penyakit"
-                  onChangeText={(text) => onChange(text)}
+                  title="Username"
+                  onChangeText={(text) => {
+                    backendErrors.username = "";
+                    onChange(text);
+                  }}
                   onBlur={onBlur}
+                  editable={false}
                   value={value}
-                  error={
-                    errors.penyakitId?.message || backendErrors?.penyakitId
-                  }
+                  error={errors.username?.message}
                 />
               )}
-              name="penyakitId"
+              name="username"
               rules={{
                 required: {
                   value: true,
-                  message: "Penyakit ID is required",
+                  message: "username",
                 },
               }}
-              defaultValue=""
+              defaultValue={user.username}
             />
           </View>
           <View style={{ marginBottom: 20 }}>
@@ -95,22 +122,24 @@ const AddPenyakit = ({ navigation }) => {
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input
-                  title="nama"
-                  placeHolder="masukan nama penyakit"
-                  onChangeText={(text) => onChange(text)}
+                  title="Nama"
+                  placeHolder="masukan nama lengkap"
+                  onChangeText={(text) => {
+                    onChange(text);
+                  }}
                   onBlur={onBlur}
                   value={value}
-                  error={errors.name?.message || backendErrors?.name}
+                  error={errors.name?.message}
                 />
               )}
               name="name"
               rules={{
                 required: {
                   value: true,
-                  message: "Penyakit name is required",
+                  message: "nama tidak boleh kosong",
                 },
               }}
-              defaultValue=""
+              defaultValue={user.name}
             />
           </View>
           <View style={{ marginBottom: 20 }}>
@@ -118,49 +147,29 @@ const AddPenyakit = ({ navigation }) => {
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input
-                  title="deskripsi"
-                  placeHolder="masukan deskripsi"
-                  multiline={true}
-                  style={{ paddingBottom: 35 }}
-                  onChangeText={(text) => onChange(text)}
+                  title="Email"
+                  placeHolder="masukan email"
+                  onChangeText={(text) => {
+                    onChange(text);
+                  }}
                   onBlur={onBlur}
                   value={value}
-                  error={errors.desc?.message || backendErrors?.desc}
+                  error={errors.email?.message}
                 />
               )}
-              name="desc"
+              name="email"
               rules={{
                 required: {
                   value: true,
-                  message: "Deskripsi is required",
+                  message: "Email tidak boleh kosong",
+                },
+                pattern: {
+                  value:
+                    /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/i,
+                  message: "Email format is not correct",
                 },
               }}
-              defaultValue=""
-            />
-          </View>
-          <View style={{ marginBottom: 20 }}>
-            <Controller
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  title="solusi"
-                  placeHolder="masukan solusi"
-                  multiline={true}
-                  style={{ paddingBottom: 35 }}
-                  onChangeText={(text) => onChange(text)}
-                  onBlur={onBlur}
-                  value={value}
-                  error={errors.solusi?.message || backendErrors?.solusi}
-                />
-              )}
-              name="solusi"
-              rules={{
-                required: {
-                  value: true,
-                  message: "Solusi is required",
-                },
-              }}
-              defaultValue=""
+              defaultValue={user.email}
             />
           </View>
         </ScrollView>
@@ -169,23 +178,17 @@ const AddPenyakit = ({ navigation }) => {
   };
 
   const onSubmit = async (data) => {
-    const result = await dispatch(addPenyakit(data));
-    console.log("result neh:", result);
-    Alert.alert(
-      result.status,
-      result.msg,
-      [
-        {
-          text: "ok",
-          onPress: () => navigation.goBack(),
-          style: "cancel",
-        },
-      ],
-      {
-        cancelable: true,
-        onDismiss: () => navigation.goBack(),
-      }
-    );
+    data = {
+      ...data,
+      userId: user.userId,
+    };
+    console.log(data, "edit submitted");
+    const response = await dispatch(updateProfile(data));
+
+    showAlert(response.status, response.msg)
+
+    dispatch(getUserById(user.userId));
+    navigation.goBack();
   };
 
   return (
@@ -213,8 +216,6 @@ const styles = StyleSheet.create({
   },
   header: {
     flex: 1,
-    // justifyContent: "space-between",
-    // alignItems: "flex-end",
     paddingHorizontal: SIZES.padding,
     paddingVertical: SIZES.padding,
   },
@@ -246,4 +247,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddPenyakit;
+export default UpdateProfile;

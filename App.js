@@ -21,6 +21,8 @@ import {
   EditGejala,
   History,
   EditPenyakit,
+  UpdateProfile,
+  UpdatePassword,
 } from "./screens";
 
 import store from "./store/store";
@@ -70,6 +72,8 @@ export default function App() {
           <Stack.Screen name="PenyakitDetail" component={PenyakitDetail} />
           <Stack.Screen name="DiagnosisResult" component={DiagnosisResult} />
           <Stack.Screen name="History" component={History} />
+          <Stack.Screen name="UpdateProfile" component={UpdateProfile} />
+          <Stack.Screen name="UpdatePassword" component={UpdatePassword} />
           <Stack.Screen
             name="AddGejalaToPenyakit"
             component={AddGejalaToPenyakit}

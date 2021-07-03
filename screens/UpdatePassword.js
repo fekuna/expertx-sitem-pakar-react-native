@@ -1,42 +1,42 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef } from "react";
 import {
   StyleSheet,
   View,
   Text,
   TouchableWithoutFeedback,
   Image,
-  FlatList,
-  ScrollView,
   Alert,
+  ScrollView,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
+import { useForm, Controller } from "react-hook-form";
 
 import RoundButton from "../components/round-button";
 import { COLORS, FONTS, icons, SIZES } from "../constants";
 
 import { FontAwesome } from "@expo/vector-icons";
-import { useForm, Controller } from "react-hook-form";
-
-import { getPenyakit, addPenyakit } from "../store/actions";
+import { updatePassword } from "../store/actions";
 import Input from "../components/input";
 
-const AddPenyakit = ({ navigation }) => {
+import { SET_ERRORS } from "../store/actions/actionTypes";
+
+const UpdatePassword = ({ navigation, route }) => {
   const {
     control,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm();
+
+  const newPassword = useRef({});
+  newPassword.current = watch("newPassword", "");
 
   const dispatch = useDispatch();
 
-  // Redux state
-  const backendErrors = useSelector((state) => state.errors.addPenyakit || {});
-
-  useEffect(() => {
-    return () => {
-      dispatch(getPenyakit());
-    };
-  }, []);
+  const user = useSelector((state) => state.auth.user);
+  const backendErrors = useSelector(
+    (state) => state.errors.updatePassword || null
+  );
 
   const renderHeader = () => {
     return (
@@ -55,13 +55,16 @@ const AddPenyakit = ({ navigation }) => {
           </TouchableWithoutFeedback>
         </View>
         <View style={styles.headerBottom}>
-          <Text style={{ ...FONTS.h1, color: COLORS.white }}>Tambah Penyakit</Text>
+          <Text style={{ ...FONTS.h1, color: COLORS.white }}>
+            Update Password
+          </Text>
         </View>
       </View>
     );
   };
 
   const renderBody = () => {
+    // console.log(user.username);
     return (
       <View style={styles.body}>
         <ScrollView>
@@ -70,21 +73,53 @@ const AddPenyakit = ({ navigation }) => {
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input
-                  title="id penyakit"
-                  placeHolder="masukan id penyakit"
-                  onChangeText={(text) => onChange(text)}
+                  title="Password Lama"
+                  placeHolder="masukkan password lama"
+                  secureTextEntry
+                  onChangeText={(text) => {
+                    // backendErrors.oldPassword = "";
+                    onChange(text);
+                  }}
                   onBlur={onBlur}
                   value={value}
-                  error={
-                    errors.penyakitId?.message || backendErrors?.penyakitId
-                  }
+                  error={errors.oldPassword?.message}
                 />
               )}
-              name="penyakitId"
+              name="oldPassword"
               rules={{
                 required: {
                   value: true,
-                  message: "Penyakit ID is required",
+                  message: "Password lama harus tidak boleh kosong",
+                },
+              }}
+              //   defaultValue={user.username}
+            />
+          </View>
+          <View style={{ marginBottom: 20 }}>
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  title="Password Baru"
+                  placeHolder="masukan password baru anda"
+                  secureTextEntry
+                  onChangeText={(text) => {
+                    onChange(text);
+                  }}
+                  onBlur={onBlur}
+                  value={value}
+                  error={errors.newPassword?.message}
+                />
+              )}
+              name="newPassword"
+              rules={{
+                required: {
+                  value: true,
+                  message: "Kolom password baru tidak boleh kosong",
+                },
+                minLength: {
+                  value: 6,
+                  message: "Minimal password 5 huruf",
                 },
               }}
               defaultValue=""
@@ -95,70 +130,25 @@ const AddPenyakit = ({ navigation }) => {
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input
-                  title="nama"
-                  placeHolder="masukan nama penyakit"
-                  onChangeText={(text) => onChange(text)}
+                  title="Ulang Password"
+                  placeHolder="ulangi password baru anda"
+                  secureTextEntry
+                  onChangeText={(text) => {
+                    onChange(text);
+                  }}
                   onBlur={onBlur}
                   value={value}
-                  error={errors.name?.message || backendErrors?.name}
+                  error={errors.rePassword?.message}
                 />
               )}
-              name="name"
+              name="rePassword"
               rules={{
                 required: {
                   value: true,
-                  message: "Penyakit name is required",
+                  message: "Kolom ulang password tidak boleh kosong.",
                 },
-              }}
-              defaultValue=""
-            />
-          </View>
-          <View style={{ marginBottom: 20 }}>
-            <Controller
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  title="deskripsi"
-                  placeHolder="masukan deskripsi"
-                  multiline={true}
-                  style={{ paddingBottom: 35 }}
-                  onChangeText={(text) => onChange(text)}
-                  onBlur={onBlur}
-                  value={value}
-                  error={errors.desc?.message || backendErrors?.desc}
-                />
-              )}
-              name="desc"
-              rules={{
-                required: {
-                  value: true,
-                  message: "Deskripsi is required",
-                },
-              }}
-              defaultValue=""
-            />
-          </View>
-          <View style={{ marginBottom: 20 }}>
-            <Controller
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  title="solusi"
-                  placeHolder="masukan solusi"
-                  multiline={true}
-                  style={{ paddingBottom: 35 }}
-                  onChangeText={(text) => onChange(text)}
-                  onBlur={onBlur}
-                  value={value}
-                  error={errors.solusi?.message || backendErrors?.solusi}
-                />
-              )}
-              name="solusi"
-              rules={{
-                required: {
-                  value: true,
-                  message: "Solusi is required",
-                },
+                validate: (value) =>
+                  value === newPassword.current || "Password tidak sama.",
               }}
               defaultValue=""
             />
@@ -169,24 +159,47 @@ const AddPenyakit = ({ navigation }) => {
   };
 
   const onSubmit = async (data) => {
-    const result = await dispatch(addPenyakit(data));
-    console.log("result neh:", result);
+    data = {
+      ...data,
+      userId: user.userId,
+    };
+    console.log(data, "edit submitted");
+    const response = await dispatch(updatePassword(data));
+
+    showAlert(response.status, response.msg)
+
+    // console.log(response);
+    navigation.goBack();
+  };
+
+  const showAlert = (title, content) =>
     Alert.alert(
-      result.status,
-      result.msg,
+      title,
+      content,
       [
         {
-          text: "ok",
-          onPress: () => navigation.goBack(),
+          text: "Cancel",
+          onPress: () =>
+            dispatch({
+              type: SET_ERRORS,
+              payload: {},
+            }),
           style: "cancel",
         },
       ],
       {
         cancelable: true,
-        onDismiss: () => navigation.goBack(),
+        onDismiss: () =>
+          dispatch({
+            type: SET_ERRORS,
+            payload: {},
+          }),
       }
     );
-  };
+
+  {
+    backendErrors ? showAlert("Failed", backendErrors) : null;
+  }
 
   return (
     <View style={styles.container}>
@@ -213,8 +226,6 @@ const styles = StyleSheet.create({
   },
   header: {
     flex: 1,
-    // justifyContent: "space-between",
-    // alignItems: "flex-end",
     paddingHorizontal: SIZES.padding,
     paddingVertical: SIZES.padding,
   },
@@ -246,4 +257,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddPenyakit;
+export default UpdatePassword;

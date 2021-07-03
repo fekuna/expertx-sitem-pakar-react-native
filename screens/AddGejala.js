@@ -49,7 +49,7 @@ const AddGejala = ({ navigation, route }) => {
           </TouchableWithoutFeedback>
         </View>
         <View style={styles.headerBottom}>
-          <Text style={{ ...FONTS.h1, color: COLORS.white }}>Add Gejala</Text>
+          <Text style={{ ...FONTS.h1, color: COLORS.white }}>Tambah Gejala</Text>
         </View>
       </View>
     );
@@ -90,7 +90,7 @@ const AddGejala = ({ navigation, route }) => {
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input
-                  title="name"
+                  title="nama"
                   placeHolder="masukan nama gejala"
                   onChangeText={(text) => {
                     backendErrors.name = "";
@@ -116,7 +116,7 @@ const AddGejala = ({ navigation, route }) => {
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input
-                  title="question"
+                  title="pertanyaan"
                   placeHolder="masukan pertanyaan"
                   multiline={true}
                   style={{ paddingBottom: 35 }}

@@ -49,7 +49,7 @@ const Home = ({ navigation }) => {
           style={{ flex: 1, alignItems: "center" }}
         >
           {/* Header Bar */}
-          <View
+          {/* <View
             style={{
               marginTop: SIZES.padding * 2,
               width: "100%",
@@ -72,10 +72,16 @@ const Home = ({ navigation }) => {
                 style={{ flex: 1 }}
               />
             </TouchableOpacity>
-          </View>
+          </View> */}
 
           {/* Greetings */}
-          <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: SIZES.padding * 3,
+            }}
+          >
             <Text style={{ color: COLORS.white, ...FONTS.h3 }}>Hello,</Text>
             <Text
               style={{
