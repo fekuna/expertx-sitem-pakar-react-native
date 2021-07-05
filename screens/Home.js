@@ -238,17 +238,36 @@ const Home = ({ navigation }) => {
 
         {/* DIAGNOSIS */}
         <View style={{ flex: 3 }}>
-          <FlatList
-            data={userHistories.slice(0, 5)}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <ListActivity
-                title={item.penyakitName}
-                subtitle={item.createdAt}
-                rightText={`${(item.hasil * 100).toFixed(2)}%`}
-              />
-            )}
-          />
+          {userHistories.length ? (
+            <FlatList
+              data={userHistories.slice(0, 5)}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => (
+                <ListActivity
+                  title={item.penyakitName}
+                  subtitle={item.createdAt}
+                  rightText={`${(item.hasil * 100).toFixed(2)}%`}
+                />
+              )}
+            />
+          ) : (
+            <View
+              style={{
+                width: "100%",
+                height: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text
+                style={{
+                  ...FONTS.body4,
+                }}
+              >
+                No Data
+              </Text>
+            </View>
+          )}
         </View>
       </View>
     );

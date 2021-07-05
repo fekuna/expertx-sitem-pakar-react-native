@@ -58,17 +58,36 @@ const History = ({ navigation }) => {
   const renderBody = () => {
     return (
       <View style={styles.body}>
-        <FlatList
-          data={userHistories}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <ListActivity
-              title={item.penyakitName}
-              subtitle={item.createdAt}
-              rightText={`${(item.hasil * 100).toFixed(2)}%`}
-            />
-          )}
-        />
+        {userHistories.length ? (
+          <FlatList
+            data={userHistories}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <ListActivity
+                title={item.penyakitName}
+                subtitle={item.createdAt}
+                rightText={`${(item.hasil * 100).toFixed(2)}%`}
+              />
+            )}
+          />
+        ) : (
+          <View
+            style={{
+              width: "100%",
+              height: "100%",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text
+              style={{
+                ...FONTS.body4,
+              }}
+            >
+              No Data
+            </Text>
+          </View>
+        )}
       </View>
     );
   };

@@ -20,9 +20,10 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "expertx.sistempakar.kucing",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./assets/adaptive-icon1.png",
+        "backgroundColor": "#7F5DF0"
       }
     },
     "web": {
