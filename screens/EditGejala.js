@@ -5,7 +5,7 @@ import {
   Text,
   TouchableWithoutFeedback,
   Image,
-  FlatList,
+  Alert,
   ScrollView,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
@@ -32,6 +32,12 @@ const EditGejala = ({ navigation, route }) => {
   const { gejalaId, nameEdit, questionEdit } = route.params;
 
   const backendErrors = useSelector((state) => state.errors.editGejala || {});
+
+  useEffect(() => {
+    return () => {
+      dispatch(getGejala());
+    };
+  }, []);
 
   const renderHeader = () => {
     return (
@@ -148,12 +154,25 @@ const EditGejala = ({ navigation, route }) => {
 
   const onSubmit = async (data) => {
     console.log(data, "edit submitted");
-    const response = await dispatch(editGejala(data));
+    const result = await dispatch(editGejala(data));
 
-    const result = await response.json();
-    console.log(result);
-    dispatch(getGejala());
-    navigation.goBack();
+    console.log(result, "result");
+
+    Alert.alert(
+      result.status,
+      result.msg,
+      [
+        {
+          text: "ok",
+          onPress: () => navigation.goBack(),
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: true,
+        onDismiss: () => navigation.goBack(),
+      }
+    );
   };
 
   return (
