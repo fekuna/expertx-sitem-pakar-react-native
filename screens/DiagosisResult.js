@@ -7,7 +7,9 @@ import {
   Image,
   ScrollView,
   FlatList,
+  SafeAreaView,
 } from "react-native";
+import Card from "../components/card";
 import { useSelector, useDispatch } from "react-redux";
 import ListActivity from "../components/list-activity";
 
@@ -78,14 +80,10 @@ const DiagnosisResult = ({ navigation, route }) => {
 
   const renderBody = () => {
     return (
-      <View style={styles.body}>
+      <SafeAreaView style={styles.body}>
         <View style={styles.section}>
-          <Text style={{ ...FONTS.h2, color: COLORS.primary }}>
-            Deskripsi
-          </Text>
-          <Text style={{ ...FONTS.body3 }}>
-            {maxResult.desc}
-          </Text>
+          <Text style={{ ...FONTS.h2, color: COLORS.primary }}>Deskripsi</Text>
+          <Text style={{ ...FONTS.body3 }}>{maxResult.desc}</Text>
         </View>
         <View style={styles.section}>
           <Text style={{ ...FONTS.h2, color: COLORS.primary }}>
@@ -97,30 +95,70 @@ const DiagnosisResult = ({ navigation, route }) => {
           <Text style={{ ...FONTS.h2, color: COLORS.primary }}>
             Kemungkinan Lain
           </Text>
-          <FlatList
-            scrollEventThrottle={32}
-            scrollEnabled
-            data={result}
-            keyExtractor={(item) => item.penyakitId}
-            renderItem={({ item }) => {
-              return (
-                <ListActivity
-                  title={item.name}
-                  rightText={(item.cfcombine * 100).toFixed(2) + "%"}
-                />
-              );
-            }}
-          />
+          {result.length > 0 ? (
+            <FlatList
+              horizontal={true}
+              scrollEventThrottle={32}
+              scrollEnabled
+              data={result}
+              keyExtractor={(item) => item.penyakitId}
+              renderItem={({ item }) => {
+                return (
+                  <Card
+                    style={{
+                      alignItems: "center",
+                      marginRight: 20,
+                      marginVertical: 20,
+                    }}
+                  >
+                    <View>
+                      <Text
+                        style={{
+                          ...FONTS.h3,
+                        }}
+                      >
+                        {item.name}
+                      </Text>
+                    </View>
+                    <View>
+                      <Text
+                        style={{
+                          ...FONTS.body3,
+                        }}
+                      >
+                        {(item.cfcombine * 100).toFixed(2) + "%"}
+                      </Text>
+                    </View>
+                  </Card>
+                );
+              }}
+            />
+          ) : (
+            <View
+              style={{
+                width: "100%",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  ...FONTS.body4,
+                }}
+              >
+                No Data
+              </Text>
+            </View>
+          )}
         </View>
-      </View>
+      </SafeAreaView>
     );
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {renderHeader()}
       {renderBody()}
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -153,7 +191,7 @@ const styles = StyleSheet.create({
     paddingVertical: SIZES.padding,
   },
   section: {
-    marginBottom: 20,
+    marginBottom: 10,
   },
   gejalaContainer: {
     flex: 1,

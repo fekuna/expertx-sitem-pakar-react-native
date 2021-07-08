@@ -178,7 +178,7 @@ const UpdatePassword = ({ navigation, route }) => {
       content,
       [
         {
-          text: "Cancel",
+          text: "Oke",
           onPress: () =>
             dispatch({
               type: SET_ERRORS,

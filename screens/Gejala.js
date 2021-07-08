@@ -75,7 +75,7 @@ const Gejala = ({ navigation }) => {
             <ListActivity
               title={item.name}
               subtitle={item.createdAt}
-              icon={userRole === "user" ? icons.right_arrow : null}
+              // icon={userRole === "user" ? icons.right_arrow : null}
               customRightContent={
                 userRole === "admin" && (
                   <View style={{ flexDirection: "row", padding: 8 }}>

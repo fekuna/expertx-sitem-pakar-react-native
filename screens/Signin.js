@@ -30,7 +30,7 @@ const Signin = ({ navigation }) => {
   };
 
   useEffect(() => {
-    console.log("coeg", IP_ADDR);
+    console.log(IP_ADDR);
     console.log(isAuthenticated, "didalem signin");
     if (isAuthenticated) {
       navigation.navigate("Home");

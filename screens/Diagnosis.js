@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   FlatList,
   Dimensions,
+  Alert,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 
@@ -15,6 +16,7 @@ import { COLORS, FONTS, SIZES, certainty } from "../constants";
 
 import { useSelector, useDispatch } from "react-redux";
 import { getGejala, calculateDiagnosis } from "../store/actions";
+import { SET_ERRORS } from "../store/actions/actionTypes";
 import RoundButton from "../components/round-button";
 
 const Diagnosis = ({ navigation }) => {
@@ -24,6 +26,7 @@ const Diagnosis = ({ navigation }) => {
   const allGejala = useSelector((state) => state.penyakit.allGejala);
   const userId = useSelector((state) => state.auth.user.userId);
   const penyakit = useSelector((state) => state.penyakit.allPenyakit);
+  const backendErrors = useSelector((state) => state.errors.diagnosis || null);
 
   const dispatch = useDispatch();
 
@@ -136,6 +139,31 @@ const Diagnosis = ({ navigation }) => {
     // console.log(item);
   };
 
+  const showAlert = (title, content) =>
+    Alert.alert(
+      title,
+      content,
+      [
+        {
+          text: "Oke",
+          onPress: () =>
+            dispatch({
+              type: SET_ERRORS,
+              payload: {},
+            }),
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: true,
+        onDismiss: () =>
+          dispatch({
+            type: SET_ERRORS,
+            payload: {},
+          }),
+      }
+    );
+
   const onSubmit = async () => {
     const data = {
       userId,
@@ -149,10 +177,18 @@ const Diagnosis = ({ navigation }) => {
     });
     setQuestionIndex(0);
     setAnswers([]);
-    navigation.navigate("DiagnosisResult", { ...result });
+    console.log(result, "hasil pakkk");
+    if (result) {
+      console.log('asokkk')
+      navigation.navigate("DiagnosisResult", { ...result });
+    }
   };
 
   console.log(answers);
+  {
+    backendErrors ? showAlert("Failed", backendErrors) : null;
+  }
+
   return (
     <LinearGradient
       colors={[COLORS.secondary, COLORS.white]}
@@ -189,7 +225,7 @@ const Diagnosis = ({ navigation }) => {
         {/* {certainty.map((c, idx) => renderButton(c, idx))} */}
       </View>
 
-      {allGejala.length === questionIndex + 1 ? (
+      {allGejala.length === questionIndex + 1 && answers.length > 0 ? (
         <RoundButton
           style={{
             position: "absolute",

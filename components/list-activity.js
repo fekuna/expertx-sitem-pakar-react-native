@@ -9,6 +9,7 @@ const ListActivity = ({
   rightText,
   icon,
   customRightContent,
+  style,
   ...props
 }) => {
   return (
@@ -18,6 +19,7 @@ const ListActivity = ({
         paddingVertical: SIZES.height * 0.012,
         // paddingHorizontal: 35,
         alignItems: "center",
+        ...style,
       }}
       {...props}
     >

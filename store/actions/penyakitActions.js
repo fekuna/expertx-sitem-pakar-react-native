@@ -235,8 +235,21 @@ export const calculateDiagnosis = (data) => async (dispatch) => {
       },
       body: JSON.stringify(data),
     });
+    if (!response.ok) {
+      const responseData = await response.json();
+      console.log(responseData);
+      throw new Error(responseData.message);
+    }
   } catch (e) {
-    console.log(e);
+    const message = e.message;
+    console.log(message, "oakwdoakd");
+    dispatch({
+      type: SET_ERRORS,
+      payload: {
+        diagnosis: "Input data is not correct, please try again.",
+      },
+    });
+    return null;
   }
 
   const result = await response.json();

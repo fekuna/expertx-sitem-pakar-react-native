@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
+import Card from "../components/card";
 import RoundButton from "../components/round-button";
 import { COLORS, FONTS, icons, SIZES } from "../constants";
 
@@ -84,7 +85,7 @@ const PenyakitDetail = ({ navigation, route }) => {
 
   const renderBody = () => {
     return (
-      <View style={styles.body}>
+      <ScrollView style={styles.body}>
         {/* <ScrollView style={{ flex: 1 }} nestedScrollEnabled> */}
         <View style={styles.section}>
           <Text style={{ ...FONTS.h2, color: COLORS.primary }}>Deskripsi</Text>
@@ -107,37 +108,60 @@ const PenyakitDetail = ({ navigation, route }) => {
           )}
         </View>
         {/* </ScrollView> */}
-      </View>
+      </ScrollView>
     );
   };
 
   const renderGejala = () => {
     return (
       <FlatList
+        horizontal={true}
         scrollEventThrottle={32}
         scrollEnabled
         data={gejalaPenyakit}
         keyExtractor={(item) => item.gejalaId}
         renderItem={({ item }) => {
           return (
-            <ListActivity
-              title={item.name}
-              subtitle={item.desc}
-              rightText={item.Penyakit_Gejala.cfp}
-              customRightContent={
-                userRole === "admin" && (
-                  <View style={{ marginLeft: 5 }}>
-                    <MaterialIcons
-                      name="delete"
-                      size={26}
-                      color="red"
-                      style={{ marginLeft: 10 }}
-                      onPress={() => onDelete(item.id)}
-                    />
-                  </View>
-                )
-              }
-            />
+            <Card
+              style={{
+                alignItems: "center",
+                marginRight: 20,
+                marginHorizontal: 5,
+                marginBottom: 15,
+                // paddingVertical: 40
+                marginTop: 15,
+              }}
+            >
+              <View>
+                <Text
+                  style={{
+                    ...FONTS.h3,
+                  }}
+                >
+                  {item.name}
+                </Text>
+              </View>
+              <View>
+                <Text
+                  style={{
+                    ...FONTS.body3,
+                  }}
+                >
+                  bobot: {item.Penyakit_Gejala.cfp}
+                </Text>
+              </View>
+              {userRole === "admin" && (
+                <View style={{ marginLeft: 5 }}>
+                  <MaterialIcons
+                    name="delete"
+                    size={26}
+                    color="red"
+                    style={{ marginLeft: 10 }}
+                    onPress={() => onDelete(item.gejalaId)}
+                  />
+                </View>
+              )}
+            </Card>
           );
         }}
       />
@@ -146,6 +170,7 @@ const PenyakitDetail = ({ navigation, route }) => {
 
   // Button actions
   const onDelete = async (gejalaId) => {
+    console.log("delete clicked", penyakitId, gejalaId);
     let response;
     try {
       response = await fetch(`${IP_ADDR}/api/penyakit/remove/gejala`, {
@@ -153,7 +178,7 @@ const PenyakitDetail = ({ navigation, route }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ penyakitId: id, gejalaId }),
+        body: JSON.stringify({ penyakitId, gejalaId }),
       });
     } catch (e) {
       console.log(e);
@@ -186,7 +211,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.secondary,
   },
   header: {
-    flex: 1,
+    height: SIZES.height * 0.3,
+    // flex: 1,
     // justifyContent: "space-between",
     // alignItems: "flex-end",
     paddingHorizontal: SIZES.padding,
@@ -203,15 +229,16 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   body: {
-    flex: 2,
+    flex: 1,
     backgroundColor: COLORS.white,
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
     paddingHorizontal: SIZES.padding,
     paddingVertical: SIZES.padding,
+    paddingBottom: 40,
   },
   section: {
-    marginBottom: 20,
+    marginBottom: 10,
     // flex: 1,
   },
   gejalaContainer: {
